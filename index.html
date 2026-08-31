@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  LIVING BUILDING CONVERSION FRAMEWORK — VOLUME II
+  Educational Partnership Companion
+  Empowering Schools, Colleges & Universities to Get Involved
+  Version 1.0.0 | April 2026
+  ============================================================
+  This document extends the Living Building Conversion Framework
+  (salmon waterfalls, moss & grapevine walls, pumpkin panels,
+  ceiling aeroponics) with a benevolent methodology for
+  educational-body participation. It is fully standalone and
+  does not require the companion document to function.
+
+  ZERO-HARM DECLARATION:
+  No telemetry, tracking, or external network calls after load.
+  All state — including accessibility settings and classroom
+  demo data — is stored locally in IndexedDB and is fully
+  user-resettable. No personal data is collected or transmitted.
+  No data is ever collected from or about minors; the interactive
+  tools on this page store only anonymous demo values a teacher
+  or student enters manually, never names, emails, or identifiers.
+
+  ANTI-INVERSION NOTE:
+  This framework exists to protect students and educators, not to
+  extract labour, data, or advertising exposure from them. Nothing
+  here may be used to mandate unpaid student labour, to bypass
+  institutional safety review, to advertise to a captive classroom
+  audience, or to justify any activity a qualified adult supervisor,
+  structural engineer, or institutional ethics process has not
+  approved.
+
+  ATTRIBUTIONS & LICENSING:
+  Pedagogical frameworks referenced: CAST's Universal Design for
+  Learning (UDL); Wiggins & McTighe's Understanding by Design (UbD);
+  PBLWorks Gold Standard Project-Based Learning.
+  Citizen-science models referenced: NASA/NSF GLOBE Program,
+  iNaturalist (California Academy of Sciences / National
+  Geographic), Cornell Lab of Ornithology NestWatch.
+  Aquaponics foundations carried over from Volume I: FAO Aquaponics
+  Food Production Systems (2019), Rakocy et al. UVI system,
+  Timmons & Ebeling Recirculating Aquaculture.
+  Indigenous agricultural knowledge is referenced respectfully and
+  in general terms; educators are encouraged to invite local
+  knowledge keepers as co-educators rather than relying on this
+  document as a substitute for that relationship.
+  Platform: original work, CC BY-NC 4.0.
+  ============================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="A benevolent, research-grounded methodology and toolkit for schools, colleges, and universities to get involved in building-integrated aquaponics — salmon systems, moss and grapevine walls, pumpkin panels, and ceiling aeroponics."/>
+<title>Educational Partnership Framework | Living Building Conversion — Volume II</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   Shares the Living Building palette (stone/moss/water/harvest/
+   salmon) for visual continuity as "Volume II," plus one new
+   accent — Lantern gold — standing for knowledge, mentorship,
+   and the classroom itself.
+   TO EXTEND: add new CSS variables here rather than hard-coding
+   colours elsewhere, so future volumes can restyle in one place.
+   ============================================================ */
+:root{
+  --stone:#0E1A10; --stone-2:#162418; --stone-3:#1E3020;
+  --moss-deep:#2D5A3D; --moss:#4A7C59; --moss-bright:#7FB069; --fern:#A8C87A; --pale-moss:#C8E6C0;
+  --river:#1A4A6E; --water:#2D7DA8; --shimmer:#5BB8D4; --foam:#B8E4F0;
+  --pumpkin:#C96B12; --pumpkin-glow:#E8841A; --carrot:#D45A10; --carrot-tip:#E87A30;
+  --salmon-dark:#A83A28; --salmon:#D45845; --salmon-pink:#E87B68; --roe:#C84830;
+  --lantern:#E5B84B; --lantern-glow:#F5D06E; --lantern-dim:#8A6B25;
+  --cream:#F0E8D5; --cream-2:#DDD0B5; --muted:rgba(240,232,213,0.55);
+  --font-display:Georgia,'Times New Roman',Times,serif;
+  --font-body:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;
+  --font-mono:'Courier New',Courier,monospace;
+  --font-ui:Verdana,Geneva,Tahoma,sans-serif;
+  --ease:cubic-bezier(0.4,0,0.2,1); --dur:0.4s;
+  --text-scale:1;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:calc(16px * var(--text-scale))}
+body{font-family:var(--font-body);background:var(--stone);color:var(--cream);line-height:1.8;overflow-x:hidden;cursor:crosshair}
+a{color:var(--shimmer);text-decoration:none}
+a:hover{color:var(--foam);text-decoration:underline}
+::selection{background:var(--moss);color:var(--cream)}
+
+/* Reduced-motion mode: toggled via Display Settings or OS preference.
+   TO EXTEND: any new animation should be wrapped so it degrades
+   gracefully here rather than being hard-disabled per-rule. */
+body.reduced-motion *,body.reduced-motion *::before,body.reduced-motion *::after{
+  animation-duration:0.001ms!important;animation-iteration-count:1!important;
+  transition-duration:0.001ms!important;scroll-behavior:auto!important;
+}
+/* High-contrast mode: swaps text/background pairs for stronger
+   contrast without touching layout. */
+body.high-contrast{--cream:#FFFFFF;--cream-2:#FFFFFF;--muted:rgba(255,255,255,0.85);--stone:#000000;--stone-2:#0A0A0A;--stone-3:#141414}
+
+noscript .ns{background:var(--salmon);color:var(--cream);padding:1rem 2rem;text-align:center;font-family:var(--font-ui);font-size:1rem;position:fixed;top:0;left:0;right:0;z-index:9999}
+
+/* ============================================================
+   SPLASH
+   ============================================================ */
+#splash{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 60%,var(--stone-3) 0%,var(--stone) 70%);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;transition:opacity 1s var(--ease),transform 1s var(--ease);overflow:hidden}
+#splash.out{opacity:0;transform:scale(1.05);pointer-events:none}
+#splash-canvas{position:absolute;inset:0;pointer-events:none;opacity:0.6}
+.splash-emblem{width:100px;height:100px;border-radius:50%;background:conic-gradient(var(--moss-deep) 0deg,var(--lantern) 90deg,var(--water) 180deg,var(--pumpkin) 270deg,var(--moss-deep) 360deg);display:flex;align-items:center;justify-content:center;font-size:2.8rem;position:relative;z-index:2;animation:turn 12s linear infinite,emblem-pulse 3s ease-in-out infinite;box-shadow:0 0 40px rgba(229,184,75,0.3)}
+@keyframes turn{to{transform:rotate(360deg)}}
+@keyframes emblem-pulse{0%,100%{box-shadow:0 0 20px rgba(45,122,168,0.4)}50%{box-shadow:0 0 60px rgba(229,184,75,0.5),0 0 100px rgba(45,122,168,0.2)}}
+.splash-title{font-family:var(--font-display);font-size:clamp(1.4rem,3.3vw,2.3rem);color:var(--cream);text-align:center;line-height:1.25;letter-spacing:0.03em;position:relative;z-index:2;max-width:580px;text-shadow:0 2px 20px rgba(0,0,0,0.8)}
+.splash-title em{color:var(--lantern);font-style:normal}
+.splash-sub{color:var(--muted);font-family:var(--font-ui);font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase;position:relative;z-index:2;text-align:center;max-width:480px}
+.splash-progress{width:260px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;position:relative;z-index:2}
+.splash-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--moss),var(--shimmer),var(--lantern));border-radius:2px;transition:width 3s var(--ease)}
+.splash-btn{background:transparent;border:1px solid var(--lantern);color:var(--lantern-glow);padding:0.8rem 2.5rem;font-family:var(--font-ui);font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:2px;position:relative;z-index:2;opacity:0;transition:background var(--dur),color var(--dur),opacity 0.5s}
+.splash-btn.show{opacity:1}
+.splash-btn:hover{background:var(--lantern);color:var(--stone)}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(14,26,16,0.96);backdrop-filter:blur(10px);border-bottom:1px solid rgba(229,184,75,0.25);transform:translateY(-100%);transition:transform 0.4s var(--ease)}
+#nav.vis{transform:translateY(0)}
+.nav-in{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:0;padding:0 1.5rem}
+.nav-logo{font-family:var(--font-display);color:var(--lantern);font-size:0.95rem;padding:0.85rem 1.1rem 0.85rem 0;border-right:1px solid rgba(229,184,75,0.25);margin-right:0.8rem;white-space:nowrap;letter-spacing:0.02em}
+.nav-links{display:flex;gap:0;overflow-x:auto;flex:1;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--muted);font-family:var(--font-ui);font-size:0.71rem;letter-spacing:0.07em;text-transform:uppercase;padding:0.9rem 0.75rem;white-space:nowrap;border-bottom:2px solid transparent;transition:color var(--dur),border-color var(--dur);text-decoration:none}
+.nav-links a:hover,.nav-links a.act{color:var(--cream);border-bottom-color:var(--lantern)}
+.nav-btns{display:flex;gap:0.5rem;padding-left:0.8rem}
+.nb{background:transparent;border:1px solid rgba(229,184,75,0.35);color:var(--muted);padding:0.4rem 0.75rem;font-family:var(--font-ui);font-size:0.71rem;cursor:pointer;border-radius:2px;transition:all var(--dur);white-space:nowrap;letter-spacing:0.06em}
+.nb:hover{background:rgba(229,184,75,0.15);color:var(--cream);border-color:var(--lantern)}
+.nb.go{background:var(--moss);color:var(--stone);border-color:var(--moss)}
+.nb.go:hover{background:var(--moss-bright)}
+
+/* ============================================================
+   OVERLAYS — Search & Settings (shared box styling)
+   ============================================================ */
+#search-ov,#settings-ov{position:fixed;inset:0;background:rgba(14,26,16,0.92);z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding-top:10vh;opacity:0;pointer-events:none;transition:opacity 0.3s var(--ease)}
+#search-ov.open,#settings-ov.open{opacity:1;pointer-events:all}
+.s-box{background:var(--stone-2);border:1px solid var(--moss);border-radius:4px;width:min(680px,90vw);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 60px rgba(74,124,89,0.15)}
+.s-in{width:100%;padding:1.2rem 1.4rem;font-size:1.1rem;font-family:var(--font-body);border:none;border-bottom:1px solid rgba(74,124,89,0.3);outline:none;background:transparent;color:var(--cream)}
+.s-in::placeholder{color:var(--muted)}
+.s-res{max-height:55vh;overflow-y:auto;padding:0.5rem}
+.s-item{padding:0.8rem 1rem;border-radius:3px;cursor:pointer;transition:background 0.2s}
+.s-item:hover{background:rgba(74,124,89,0.15)}
+.s-item h4{font-family:var(--font-ui);font-size:0.85rem;color:var(--moss-bright);margin-bottom:0.2rem}
+.s-item p{font-size:0.8rem;color:var(--muted);line-height:1.4}
+.s-empty{padding:2rem;text-align:center;color:var(--muted);font-family:var(--font-ui);font-size:0.88rem}
+
+.settings-box{padding:1.4rem 1.6rem;border:1px solid var(--lantern-dim)}
+.settings-hdr{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-display);font-size:1.15rem;color:var(--lantern);margin-bottom:1.2rem;border-bottom:1px solid rgba(229,184,75,0.2);padding-bottom:0.8rem}
+.settings-close{background:transparent;border:1px solid rgba(240,232,213,0.2);color:var(--muted);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:0.85rem}
+.settings-close:hover{color:var(--cream);border-color:var(--cream)}
+.settings-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.6rem;padding:0.8rem 0;border-bottom:1px solid rgba(240,232,213,0.08)}
+.settings-label{font-family:var(--font-ui);font-size:0.8rem;color:var(--cream-2);letter-spacing:0.04em}
+.settings-opts{display:flex;gap:0.4rem}
+.settings-opt{background:transparent;border:1px solid rgba(240,232,213,0.25);color:var(--muted);padding:0.35rem 0.8rem;font-family:var(--font-ui);font-size:0.72rem;border-radius:14px;cursor:pointer;transition:all 0.2s}
+.settings-opt:hover{border-color:var(--lantern)}
+.settings-opt.active{background:var(--lantern);color:var(--stone);border-color:var(--lantern)}
+.settings-note{font-size:0.76rem;color:var(--muted);margin-top:1rem;line-height:1.6;font-style:italic}
+
+/* ============================================================
+   HUD & CONSTELLATION
+   ============================================================ */
+#hud{position:fixed;bottom:1.5rem;right:1.5rem;background:rgba(14,26,16,0.95);border:1px solid rgba(229,184,75,0.4);border-radius:5px;padding:0.85rem 1rem;z-index:999;min-width:180px;font-family:var(--font-mono);font-size:0.7rem;color:var(--cream);backdrop-filter:blur(8px);box-shadow:0 8px 32px rgba(0,0,0,0.5),inset 0 1px 0 rgba(229,184,75,0.1);transition:transform 0.3s var(--ease)}
+#hud:hover{transform:scale(1.02)}
+.hud-t{font-family:var(--font-ui);font-size:0.63rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--lantern);border-bottom:1px solid rgba(229,184,75,0.25);padding-bottom:0.4rem;margin-bottom:0.5rem}
+.hud-r{display:flex;justify-content:space-between;align-items:center;gap:0.6rem;margin-bottom:0.3rem}
+.hud-l{color:var(--muted)}
+.hud-v{color:var(--lantern-glow);font-weight:bold}
+.hud-bw{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin:0.4rem 0;overflow:hidden}
+.hud-bb{height:100%;background:linear-gradient(90deg,var(--moss),var(--lantern));border-radius:2px;transition:width 0.5s var(--ease)}
+.hud-rs{margin-top:0.5rem;background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--muted);font-size:0.62rem;padding:0.2rem 0.5rem;cursor:pointer;border-radius:2px;font-family:var(--font-ui);letter-spacing:0.07em;width:100%;transition:color 0.2s,border-color 0.2s}
+.hud-rs:hover{color:var(--cream);border-color:var(--lantern)}
+#const-w{position:fixed;bottom:1.5rem;left:1.5rem;width:145px;height:145px;z-index:998}
+#const-c{width:100%;height:100%;border-radius:5px;border:1px solid rgba(229,184,75,0.3);background:rgba(14,26,16,0.9);backdrop-filter:blur(5px)}
+#water-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.05}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero{min-height:92vh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:5rem 3rem 4rem;overflow:hidden;background:radial-gradient(ellipse at 15% 80%,rgba(26,74,110,0.35) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(229,184,75,0.18) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(14,26,16,0.8) 0%,var(--stone) 100%)}
+.hero-vines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(12deg,transparent,transparent 80px,rgba(74,124,89,0.04) 80px,rgba(74,124,89,0.04) 81px),repeating-linear-gradient(-8deg,transparent,transparent 120px,rgba(229,184,75,0.03) 120px,rgba(229,184,75,0.03) 121px)}
+.hero-kicker{font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--lantern);margin-bottom:1rem;position:relative;z-index:2}
+.hero-h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.8rem);color:var(--cream);line-height:1.14;max-width:840px;margin-bottom:1.4rem;position:relative;z-index:2}
+.hero-h1 .g{color:var(--moss-bright)}
+.hero-h1 .w{color:var(--shimmer)}
+.hero-h1 .l{color:var(--lantern)}
+.hero-h1 .p{color:var(--pumpkin-glow)}
+.hero-sub{color:var(--muted);font-size:clamp(0.92rem,1.4vw,1.08rem);max-width:660px;margin-bottom:2.2rem;line-height:1.8;position:relative;z-index:2}
+.hero-badges{display:flex;gap:0.8rem;flex-wrap:wrap;position:relative;z-index:2;margin-bottom:2.5rem}
+.badge{border:1px solid;border-radius:20px;padding:0.35rem 1rem;font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase}
+.badge.g{border-color:var(--moss);color:var(--moss-bright)}
+.badge.w{border-color:var(--water);color:var(--shimmer)}
+.badge.l{border-color:var(--lantern);color:var(--lantern-glow)}
+.hero-stats{display:flex;gap:2.2rem;flex-wrap:wrap;position:relative;z-index:2}
+.hero-stat-val{font-family:var(--font-display);font-size:clamp(1.6rem,2.6vw,2.2rem);color:var(--lantern);font-weight:bold;line-height:1}
+.hero-stat-label{font-family:var(--font-ui);font-size:0.72rem;color:var(--muted);letter-spacing:0.07em;margin-top:0.3rem}
+
+/* ============================================================
+   MAIN / SECTIONS
+   ============================================================ */
+main{max-width:1220px;margin:0 auto;padding:0 2rem;position:relative;z-index:1}
+.section{padding:4.5rem 0;border-bottom:1px solid rgba(229,184,75,0.1);opacity:0;transform:translateY(30px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease)}
+.section.in{opacity:1;transform:translateY(0)}
+.sk{font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.6rem}
+.sk.l{color:var(--lantern)} .sk.g{color:var(--moss-bright)} .sk.w{color:var(--shimmer)} .sk.p{color:var(--pumpkin-glow)}
+.sh{font-family:var(--font-display);font-size:clamp(1.6rem,2.8vw,2.4rem);color:var(--cream);line-height:1.2;margin-bottom:1.1rem}
+.sh em{font-style:normal}
+.sl{font-size:1.02rem;color:var(--cream-2);max-width:800px;margin-bottom:1.8rem;line-height:1.85}
+.sb{color:var(--muted);line-height:1.85;max-width:820px}
+
+/* ============================================================
+   SYS-GRID cards (reused for Vision & R&D Digest)
+   ============================================================ */
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.4rem;margin:2.2rem 0}
+.sys-card{border:1px solid rgba(229,184,75,0.25);border-radius:5px;overflow:hidden;transition:transform var(--dur),box-shadow var(--dur);background:rgba(22,36,24,0.7)}
+.sys-card:hover{transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,0.5)}
+.sys-head{padding:1.2rem 1.4rem;display:flex;align-items:center;gap:0.9rem;background:linear-gradient(120deg,rgba(30,48,32,0.8),rgba(229,184,75,0.12))}
+.sys-icon{font-size:1.8rem;flex-shrink:0}
+.sys-name{font-family:var(--font-display);font-size:1.05rem;color:var(--cream)}
+.sys-body{padding:1.1rem 1.4rem;font-size:0.86rem;color:var(--muted);line-height:1.7}
+
+/* ============================================================
+   DEEP CARDS (Ethics principles)
+   ============================================================ */
+.deep-list{display:flex;flex-direction:column;gap:1rem;margin:2.2rem 0}
+.deep-card{border:1px solid rgba(229,184,75,0.2);border-radius:4px;overflow:hidden;background:rgba(22,36,24,0.5)}
+.deep-hdr{display:flex;align-items:center;gap:1.1rem;padding:1.1rem 1.3rem;cursor:pointer;transition:background 0.2s;user-select:none}
+.deep-hdr:hover{background:rgba(229,184,75,0.08)}
+.deep-num{min-width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.8rem;font-weight:bold;flex-shrink:0;background:rgba(229,184,75,0.22);color:var(--lantern-glow)}
+.deep-meta{flex:1}
+.deep-title{font-family:var(--font-display);font-size:1.02rem;color:var(--cream)}
+.deep-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.35rem}
+.dtag{font-family:var(--font-ui);font-size:0.63rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.14rem 0.5rem;border-radius:10px;border:1px solid rgba(229,184,75,0.35);color:var(--lantern-glow);background:rgba(229,184,75,0.08)}
+.deep-tog{font-size:1.25rem;color:var(--lantern);flex-shrink:0;transition:transform 0.3s var(--ease)}
+.deep-card.open .deep-tog{transform:rotate(45deg)}
+.deep-body{max-height:0;overflow:hidden;transition:max-height 0.6s var(--ease)}
+.deep-card.open .deep-body{max-height:600px}
+.deep-in{padding:0 1.3rem 1.3rem;border-top:1px solid rgba(229,184,75,0.12)}
+.deep-in p{margin:0.75rem 0;font-size:0.88rem;color:var(--cream-2);line-height:1.75}
+.reviewed-btn{background:transparent;border:1px solid var(--lantern);color:var(--lantern-glow);padding:0.4rem 1.1rem;font-family:var(--font-ui);font-size:0.72rem;cursor:pointer;border-radius:2px;transition:background 0.2s,color 0.2s;margin-top:0.6rem;letter-spacing:0.08em}
+.reviewed-btn:hover{background:var(--lantern);color:var(--stone)}
+.deep-card.done .reviewed-btn{background:var(--lantern);color:var(--stone);cursor:default}
+.deep-card.done .deep-num{background:var(--lantern);color:var(--stone)}
+
+/* ============================================================
+   TABS (Grade-Band Pathways)
+   ============================================================ */
+.tab-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1.8rem 0 0}
+.tab-btn{background:rgba(22,36,24,0.6);border:1px solid rgba(229,184,75,0.25);color:var(--muted);padding:0.7rem 1.2rem;font-family:var(--font-ui);font-size:0.78rem;letter-spacing:0.05em;border-radius:5px 5px 0 0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem}
+.tab-btn:hover{color:var(--cream)}
+.tab-btn.active{background:rgba(229,184,75,0.14);color:var(--lantern-glow);border-color:var(--lantern)}
+.tab-panels{border:1px solid rgba(229,184,75,0.25);border-radius:0 5px 5px 5px;background:rgba(22,36,24,0.4);padding:1.8rem}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.tab-focus{font-size:0.95rem;color:var(--cream-2);line-height:1.75;margin-bottom:1.3rem;font-style:italic;border-left:3px solid var(--lantern);padding-left:1rem}
+.tab-sub{font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--lantern);margin:1.2rem 0 0.6rem}
+.tab-list{list-style:none;padding:0}
+.tab-list li{padding:0.4rem 0;font-size:0.87rem;color:var(--muted);line-height:1.6;display:flex;gap:0.6rem}
+.tab-list li::before{content:'→';color:var(--moss-bright);flex-shrink:0}
+
+/* ============================================================
+   CURRICULUM MATRIX (interactive, data-driven grid)
+   ============================================================ */
+#matrix-grid{display:grid;grid-template-columns:minmax(150px,190px) repeat(5,1fr);gap:4px;margin:2rem 0 1rem}
+.mx-cell{display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.75rem;padding:0.5rem;border-radius:3px}
+.mx-corner{background:transparent;color:var(--muted);font-family:var(--font-ui);font-size:0.65rem;text-align:left;align-items:flex-end;justify-content:flex-start;letter-spacing:0.03em}
+.mx-colhead{background:rgba(229,184,75,0.1);border:1px solid rgba(229,184,75,0.2);flex-direction:column;gap:0.2rem;color:var(--lantern-glow);font-family:var(--font-ui);padding:0.6rem 0.3rem}
+.mx-icon{font-size:1.3rem}
+.mx-collabel{font-size:0.62rem;letter-spacing:0.02em;line-height:1.2}
+.mx-rowhead{background:rgba(74,124,89,0.1);border:1px solid rgba(74,124,89,0.2);justify-content:flex-start;text-align:left;color:var(--moss-bright);font-family:var(--font-ui);font-size:0.72rem;padding:0.6rem 0.7rem}
+.mx-btn{background:rgba(22,36,24,0.7);border:1px solid rgba(240,232,213,0.1);cursor:pointer;font-size:1.4rem;min-height:52px;transition:all 0.2s;color:var(--cream)}
+.mx-btn:hover{background:rgba(229,184,75,0.18);border-color:var(--lantern);transform:scale(1.05)}
+.mx-btn:focus-visible{outline:2px solid var(--lantern);outline-offset:2px}
+.mx-btn.explored{background:rgba(127,176,105,0.18);border-color:var(--moss-bright)}
+.mx-btn.explored::after{content:'✓';position:absolute;font-size:0.6rem}
+#matrix-detail{border:1px solid rgba(229,184,75,0.3);border-radius:4px;background:rgba(229,184,75,0.06);padding:1.2rem 1.4rem;min-height:90px;margin-top:0.5rem}
+#matrix-detail h4{font-family:var(--font-display);font-size:1rem;color:var(--lantern-glow);margin-bottom:0.5rem}
+#matrix-detail p{font-size:0.88rem;color:var(--cream-2);line-height:1.7}
+.mx-progress{font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-top:0.8rem;text-align:right}
+
+/* ============================================================
+   TIER CARDS (Partnership Engagement Tiers)
+   ============================================================ */
+.tiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem;margin:2.2rem 0}
+.tier-card{border:1px solid rgba(229,184,75,0.2);border-radius:5px;overflow:hidden;transition:transform var(--dur),box-shadow var(--dur);background:rgba(22,36,24,0.55)}
+.tier-card:hover{transform:translateY(-4px);box-shadow:0 14px 44px rgba(0,0,0,0.45)}
+.tier-head{padding:1.1rem 1.3rem;color:var(--stone)}
+.tier-card:nth-child(1) .tier-head{background:linear-gradient(120deg,var(--river),var(--water))}
+.tier-card:nth-child(2) .tier-head{background:linear-gradient(120deg,var(--moss-deep),var(--moss-bright))}
+.tier-card:nth-child(3) .tier-head{background:linear-gradient(120deg,var(--pumpkin),var(--pumpkin-glow))}
+.tier-card:nth-child(4) .tier-head{background:linear-gradient(120deg,var(--lantern-dim),var(--lantern))}
+.tier-num{font-family:var(--font-mono);font-size:0.7rem;opacity:0.85;letter-spacing:0.1em;margin-bottom:0.25rem}
+.tier-name{font-family:var(--font-display);font-size:1.12rem;font-weight:bold}
+.tier-scope{font-size:0.8rem;opacity:0.85;margin-top:0.2rem}
+.tier-body{padding:1.1rem 1.3rem}
+.tier-body ul{list-style:none;padding:0}
+.tier-body li{padding:0.35rem 0;font-size:0.83rem;color:var(--muted);border-bottom:1px solid rgba(229,184,75,0.1);line-height:1.4;display:flex;gap:0.5rem}
+.tier-body li::before{content:'→';color:var(--lantern);flex-shrink:0}
+.ladder-svg{width:100%;max-width:640px;margin:1.5rem auto 0;display:block}
+
+/* ============================================================
+   TOOLS — Wizard & Logger
+   ============================================================ */
+.tool-block{border:1px solid rgba(229,184,75,0.25);border-radius:6px;background:rgba(22,36,24,0.55);padding:1.8rem;margin:2rem 0}
+.tool-title{font-family:var(--font-display);font-size:1.25rem;color:var(--lantern);margin-bottom:0.5rem}
+.tool-desc{font-size:0.86rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
+
+.wiz-dots{display:flex;gap:0.5rem;margin-bottom:1.4rem}
+.wiz-dot{width:26px;height:4px;border-radius:2px;background:rgba(240,232,213,0.15)}
+.wiz-dot.on{background:var(--lantern)}
+.wiz-screen{display:none}
+.wiz-screen.active{display:block}
+.wiz-q{font-family:var(--font-display);font-size:1.1rem;color:var(--cream);margin-bottom:1.1rem}
+.wiz-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.7rem;margin-bottom:1.4rem}
+.wiz-opt{background:rgba(14,26,16,0.6);border:1px solid rgba(240,232,213,0.15);color:var(--cream-2);padding:0.9rem 1rem;border-radius:4px;cursor:pointer;font-family:var(--font-body);font-size:0.85rem;text-align:left;transition:all 0.2s;line-height:1.4}
+.wiz-opt:hover{border-color:var(--lantern)}
+.wiz-opt.sel{background:rgba(229,184,75,0.15);border-color:var(--lantern);color:var(--lantern-glow)}
+.wiz-nav{display:flex;justify-content:space-between;gap:0.6rem}
+.wiz-btn{background:var(--moss);color:var(--stone);border:none;padding:0.6rem 1.4rem;border-radius:3px;font-family:var(--font-ui);font-size:0.78rem;letter-spacing:0.06em;cursor:pointer;transition:background 0.2s}
+.wiz-btn:hover:not(:disabled){background:var(--moss-bright)}
+.wiz-btn:disabled{opacity:0.35;cursor:not-allowed}
+.wiz-btn.ghost{background:transparent;border:1px solid rgba(240,232,213,0.25);color:var(--muted)}
+.wiz-btn.ghost:hover{color:var(--cream);border-color:var(--cream)}
+.wiz-result{background:rgba(229,184,75,0.08);border:1px solid var(--lantern);border-radius:5px;padding:1.4rem}
+.wiz-result-label{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.wiz-result-tier{font-family:var(--font-display);font-size:1.5rem;color:var(--lantern-glow);margin:0.3rem 0 1rem}
+.wiz-result ul{list-style:none;padding:0;margin-bottom:1rem}
+.wiz-result li{padding:0.3rem 0;font-size:0.86rem;color:var(--cream-2)}
+.wiz-result li::before{content:'✓ ';color:var(--moss-bright)}
+
+.logger-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.4rem}
+@media(max-width:640px){.logger-grid{grid-template-columns:1fr}}
+.logger-field{background:rgba(14,26,16,0.5);border:1px solid rgba(240,232,213,0.1);border-radius:4px;padding:0.9rem 1rem}
+.logger-field-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+.logger-field label{font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.05em;color:var(--cream-2)}
+.logger-val{font-family:var(--font-mono);font-size:0.78rem;color:var(--lantern-glow)}
+.logger-field input[type=range]{width:100%;accent-color:var(--moss-bright)}
+.chip{display:inline-block;margin-top:0.4rem;padding:0.15rem 0.6rem;border-radius:10px;font-size:0.65rem;font-family:var(--font-ui);letter-spacing:0.05em;text-transform:uppercase}
+.chip.ok{background:rgba(127,176,105,0.2);color:var(--moss-bright)}
+.chip.warn{background:rgba(229,184,75,0.2);color:var(--lantern-glow)}
+.chip.bad{background:rgba(212,88,69,0.2);color:var(--salmon-pink)}
+.logger-btns{display:flex;gap:0.6rem;margin-bottom:1.2rem}
+#logger-canvas{width:100%;height:auto;border:1px solid rgba(240,232,213,0.12);border-radius:4px;background:rgba(10,18,11,0.5)}
+
+/* ============================================================
+   DATA TABLE (Safety Protocols)
+   ============================================================ */
+.data-tbl{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.83rem}
+.data-tbl th{background:rgba(30,48,32,0.8);color:var(--lantern-glow);padding:0.75rem 0.9rem;font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;text-align:left}
+.data-tbl td{padding:0.65rem 0.9rem;border-bottom:1px solid rgba(229,184,75,0.1);vertical-align:top;line-height:1.5;color:var(--cream-2)}
+.data-tbl tr:nth-child(even) td{background:rgba(22,36,24,0.4)}
+.data-tbl tr:hover td{background:rgba(229,184,75,0.06)}
+
+/* ============================================================
+   CALLOUT
+   ============================================================ */
+.callout{border-left:4px solid var(--lantern);background:rgba(229,184,75,0.08);border-radius:0 4px 4px 0;padding:1.1rem 1.4rem;margin:1.8rem 0}
+.callout h4{font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--lantern);margin-bottom:0.5rem}
+.callout p,.callout ul{font-size:0.86rem;color:var(--cream-2);line-height:1.75}
+.callout ul{padding-left:1.2rem}
+.callout li{margin-bottom:0.3rem}
+
+/* ============================================================
+   FUNDING CARDS
+   ============================================================ */
+.fund-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.3rem;margin:2rem 0}
+.fund-card{border:1px solid rgba(229,184,75,0.2);border-radius:5px;padding:1.3rem 1.4rem;background:rgba(22,36,24,0.5)}
+.fund-card h4{font-family:var(--font-display);font-size:1.02rem;color:var(--lantern-glow);margin-bottom:0.6rem}
+.fund-card p{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:0.7rem}
+.fund-tags{display:flex;gap:0.4rem;flex-wrap:wrap}
+.fund-tag{font-size:0.66rem;font-family:var(--font-ui);padding:0.15rem 0.55rem;border-radius:10px;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.15);color:var(--muted)}
+
+.mou-list{list-style:none;padding:0;margin:1.4rem 0}
+.mou-list li{padding:0.6rem 0;border-bottom:1px solid rgba(229,184,75,0.1);font-size:0.87rem;color:var(--cream-2);line-height:1.6;display:flex;gap:0.7rem}
+.mou-list li strong{color:var(--lantern-glow);min-width:190px;flex-shrink:0}
+
+/* ============================================================
+   REVEAL / FOOTER / PRINT / RESPONSIVE
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s var(--ease),transform 0.6s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+footer{background:rgba(10,18,11,0.97);border-top:1px solid rgba(229,184,75,0.15);padding:3.5rem 2rem;margin-top:4rem}
+.ft-in{max-width:1220px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:3rem}
+.ft-col h4{font-family:var(--font-ui);font-size:0.66rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--lantern);margin-bottom:0.8rem}
+.ft-col p,.ft-col li{font-size:0.8rem;line-height:1.7;color:var(--muted)}
+.ft-col ul{list-style:none;padding:0}
+.ft-col li{margin-bottom:0.3rem}
+.zh{border:1px solid rgba(229,184,75,0.25);border-radius:3px;padding:1rem 1.2rem;font-size:0.78rem;color:var(--muted);line-height:1.6;background:rgba(30,48,32,0.25)}
+.zh strong{color:var(--lantern)}
+.ft-btm{max-width:1220px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(229,184,75,0.08);font-size:0.72rem;color:rgba(240,232,213,0.25);display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem}
+
+@media print{
+  #splash,#nav,#hud,#const-w,#search-ov,#settings-ov,#water-canvas{display:none!important}
+  body{background:white;color:black;cursor:auto}
+  .section,.reveal{opacity:1!important;transform:none!important}
+  .deep-card.open .deep-body,.deep-body{max-height:none!important}
+  .hero-h1,.sh{color:black}
+  .wiz-nav,.logger-btns,.reviewed-btn{display:none!important}
+  footer{background:white;border-top:1px solid #ccc}
+  .ft-col p,.ft-col li,.sb,.sl,.deep-in p,.tab-list li{color:#333}
+  @page{margin:2cm}
+}
+@media(max-width:768px){
+  #const-w{display:none}
+  #hud{bottom:0.7rem;right:0.7rem;min-width:150px}
+  #hero{padding:4rem 1.5rem 3rem}
+  #matrix-grid{grid-template-columns:minmax(90px,110px) repeat(5,1fr)}
+  .mx-collabel{display:none}
+}
+</style>
+</head>
+<body>
+
+<noscript><div class="ns">JavaScript required for full interactivity. Core content remains readable below.</div></noscript>
+
+<canvas id="water-canvas"></canvas>
+
+<!-- ============================================================
+     SPLASH
+     ============================================================ -->
+<div id="splash" role="dialog" aria-label="Welcome screen">
+  <canvas id="splash-canvas"></canvas>
+  <div class="splash-emblem" aria-hidden="true">🎓</div>
+  <h2 class="splash-title">Empowering Educational Bodies to Build the <em>Living Classroom</em></h2>
+  <p class="splash-sub">Volume II · A Benevolent Methodology for Schools, Colleges &amp; Universities</p>
+  <div class="splash-progress"><div class="splash-bar" id="sbar"></div></div>
+  <button class="splash-btn" id="sbtn" onclick="exitSplash()">Enter the Framework →</button>
+</div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav id="nav" aria-label="Main navigation">
+  <div class="nav-in">
+    <div class="nav-logo">Education Partnership · Vol. II</div>
+    <div class="nav-links">
+      <a href="#vision">Vision</a>
+      <a href="#ethics">Ethics Charter</a>
+      <a href="#research">R&amp;D Digest</a>
+      <a href="#pathways">Grade Pathways</a>
+      <a href="#matrix">Curriculum Matrix</a>
+      <a href="#tiers">Partnership Tiers</a>
+      <a href="#tools">Classroom Tools</a>
+      <a href="#safety">Safety Protocols</a>
+      <a href="#funding">Funding &amp; Governance</a>
+    </div>
+    <div class="nav-btns">
+      <button class="nb" onclick="openSearch()">⌕ Search</button>
+      <button class="nb" onclick="openSettings()">⚙ Display</button>
+      <button class="nb go" onclick="window.print()">⎙ Print</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Search overlay -->
+<div id="search-ov" role="search" aria-label="Search the framework">
+  <div class="s-box">
+    <input type="text" class="s-in" id="sinput" placeholder="Search ethics, R&amp;D, tiers, safety…" oninput="runSearch(this.value)" aria-label="Search"/>
+    <div class="s-res" id="sres"><div class="s-empty">Begin typing to search…</div></div>
+  </div>
+</div>
+
+<!-- Settings overlay -->
+<div id="settings-ov" role="dialog" aria-label="Classroom display settings">
+  <div class="s-box settings-box">
+    <div class="settings-hdr">Classroom Display Settings<button class="settings-close" onclick="closeSettings()" aria-label="Close settings">✕</button></div>
+    <div class="settings-row">
+      <span class="settings-label">Text Size</span>
+      <div class="settings-opts">
+        <button class="settings-opt" data-key="textScale" data-val="1" onclick="updateSetting('textScale',1,this)">Normal</button>
+        <button class="settings-opt" data-key="textScale" data-val="1.15" onclick="updateSetting('textScale',1.15,this)">Large</button>
+        <button class="settings-opt" data-key="textScale" data-val="1.3" onclick="updateSetting('textScale',1.3,this)">X-Large</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Motion</span>
+      <div class="settings-opts">
+        <button class="settings-opt" data-key="reducedMotion" data-val="false" onclick="updateSetting('reducedMotion',false,this)">Normal</button>
+        <button class="settings-opt" data-key="reducedMotion" data-val="true" onclick="updateSetting('reducedMotion',true,this)">Reduced</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">Contrast</span>
+      <div class="settings-opts">
+        <button class="settings-opt" data-key="highContrast" data-val="false" onclick="updateSetting('highContrast',false,this)">Normal</button>
+        <button class="settings-opt" data-key="highContrast" data-val="true" onclick="updateSetting('highContrast',true,this)">High</button>
+      </div>
+    </div>
+    <p class="settings-note">These settings are Universal Design for Learning (UDL) aids for classroom projection and mixed-readiness viewing. Stored only in this browser; reset anytime.</p>
+    <button class="hud-rs" onclick="resetSettingsUI()">Reset to defaults</button>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud" title="Tracks how many ethics principles, tools, and milestones you've engaged with. All data is local and user-resettable.">
+  <div class="hud-t">Educator Engagement</div>
+  <div class="hud-r"><span class="hud-l">Milestones</span><span class="hud-v" id="hv1">0 / 10</span></div>
+  <div class="hud-bw"><div class="hud-bb" id="hbb" style="width:0%"></div></div>
+  <div class="hud-r"><span class="hud-l">Sections seen</span><span class="hud-v" id="hv2">0</span></div>
+  <div class="hud-r"><span class="hud-l">Role</span><span class="hud-v" id="hvl">Newcomer</span></div>
+  <button class="hud-rs" onclick="resetAll()">Reset progress</button>
+</div>
+
+<div id="const-w" aria-hidden="true" title="Ten milestones — ethics principles adopted, tools used, and the curriculum matrix explored.">
+  <canvas id="const-c" width="145" height="145"></canvas>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero" aria-labelledby="h1">
+  <div class="hero-vines" aria-hidden="true"></div>
+  <p class="hero-kicker">Living Building Conversion Framework · Volume II · Educational Partnership Companion</p>
+  <h1 class="hero-h1" id="h1">Empowering <span class="g">Schools</span>, <span class="w">Colleges</span> &amp; <span class="l">Universities</span> to Grow Inside the <span class="p">Living Building</span></h1>
+  <p class="hero-sub">A benevolent, research-grounded methodology for bringing salmon cascades, moss biofiltration, grapevine trellises, pumpkin walls, and ceiling aeroponics into classrooms and campuses — safely, equitably, and entirely on terms educators control.</p>
+  <div class="hero-badges">
+    <span class="badge l">Zero-Cost Entry Tier</span>
+    <span class="badge g">Age-Graded Safety</span>
+    <span class="badge w">UDL-Aligned</span>
+    <span class="badge l">No Student Data Harvested</span>
+    <span class="badge g">Teacher-Controlled Curriculum</span>
+  </div>
+  <div class="hero-stats">
+    <div><div class="hero-stat-val">4</div><div class="hero-stat-label">Partnership Tiers</div></div>
+    <div><div class="hero-stat-val">25</div><div class="hero-stat-label">Curriculum Matrix Cells</div></div>
+    <div><div class="hero-stat-val">10</div><div class="hero-stat-label">Engagement Milestones</div></div>
+    <div><div class="hero-stat-val">K–PhD</div><div class="hero-stat-label">Grade-Band Coverage</div></div>
+  </div>
+</section>
+
+<main>
+
+<!-- ============================================================
+     01 — VISION
+     ============================================================ -->
+<section class="section" id="vision" aria-labelledby="c1">
+  <p class="sk l">01 — Why Educational Bodies Are the Missing Multiplier</p>
+  <h2 class="sh" id="c1">A Living Building Teaches Best When <em style="color:var(--lantern)">Someone Is Watching It Grow</em></h2>
+  <p class="sl">Volume I of this framework describes how to convert an existing building into a working ecosystem — salmon cascades, moss and grapevine walls, pumpkin panels, ceiling-suspended carrots. That system generates something just as valuable as food: a continuous, physically real stream of biology, chemistry, engineering, and data that no textbook diagram can replicate. Educational bodies are the institutions best equipped to turn that stream into learning, generation after generation, long after any single construction budget is spent. This volume exists to make that partnership easy to start, safe to run, and impossible to exploit.</p>
+  <p class="sb">Every module below is written for three overlapping audiences at once: the classroom teacher deciding whether a nitrogen-cycle unit fits this term, the department chair or school-board trustee weighing a facilities commitment, and the corporate or government partner (including the kind of ESG-minded organization described in a companion governance framework) looking for a genuine, non-exploitative way to fund student learning rather than merely sponsor a plaque. The eight cards below sketch what each core system offers a curriculum before any ethics, funding, or logistics questions are answered.</p>
+
+  <div class="sys-grid">
+    <div class="sys-card reveal"><div class="sys-head"><div class="sys-icon">🐟</div><div class="sys-name">Salmon Cascade Pools</div></div><div class="sys-body">Living vertebrate biology, water chemistry, and animal-welfare ethics in one tank — the single most requested classroom subject this project offers.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.06s"><div class="sys-head"><div class="sys-icon">💧</div><div class="sys-name">Nutrient Cycle &amp; Water Chemistry</div></div><div class="sys-body">A real, measurable nitrogen cycle running in the same room as the students — titration, pH, and microbiology made tangible rather than diagrammatic.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.12s"><div class="sys-head"><div class="sys-icon">🌿</div><div class="sys-name">Moss &amp; Biofiltration Walls</div></div><div class="sys-body">Low-risk, low-cost, and forgiving — often the very first hands-on module offered to the youngest grade bands.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.18s"><div class="sys-head"><div class="sys-icon">🍇</div><div class="sys-name">Grapevine &amp; Pumpkin Walls</div></div><div class="sys-body">Structural engineering, plant reproduction, and food-sovereignty history converge on a single trellis wire.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.24s"><div class="sys-head"><div class="sys-icon">🥕</div><div class="sys-name">Ceiling Aeroponic Carrots</div></div><div class="sys-body">Root gravitropism made visible, plus a genuinely startling classroom spectacle that pulls in students who nothing else has reached yet.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.3s"><div class="sys-head"><div class="sys-icon">📊</div><div class="sys-name">Data Literacy Across All Systems</div></div><div class="sys-body">Every module produces loggable, graphable, statistically real data — a built-in data-science curriculum hiding inside a biology unit.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.36s"><div class="sys-head"><div class="sys-icon">🤝</div><div class="sys-name">Community &amp; Land-Based Knowledge</div></div><div class="sys-body">A natural entry point for Elders, food-sovereignty practitioners, and local growers to co-teach alongside laboratory science.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.42s"><div class="sys-head"><div class="sys-icon">🏛️</div><div class="sys-name">Governance &amp; Civics</div></div><div class="sys-body">The partnership itself — MOUs, safety sign-off, funding models — is a real-world civics and governance case study for older students.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     02 — ETHICS CHARTER
+     ============================================================ -->
+<section class="section" id="ethics" aria-labelledby="c2">
+  <p class="sk l">02 — The Benevolent Methodology</p>
+  <h2 class="sh" id="c2">Seven Principles That Are <em style="color:var(--lantern)">Not Negotiable</em></h2>
+  <p class="sl">"Benevolent" is not a marketing word here — it is a constraint. Every module, tier, and tool in this document is designed so that a well-meaning school administrator cannot accidentally use it to extract free labour, expose a child's data, or bypass a safety review. The seven principles below apply to every partnership tier, every grade band, and every funding source without exception. Expand each one to see what it actually rules in and out.</p>
+
+  <div class="deep-list">
+    <div class="deep-card" id="dc1">
+      <div class="deep-hdr" onclick="toggleDeep(1)">
+        <div class="deep-num">01</div>
+        <div class="deep-meta"><div class="deep-title">No Extractive Labour</div><div class="deep-tags"><span class="dtag">Student Rights</span><span class="dtag">Anti-Exploitation</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Student time on this project is only ever spent because it maps to an explicit learning objective a teacher has chosen — never because a tank needs cleaning and a class happens to be free. If a task exists purely to save an institution or corporate partner money on maintenance labour, it is a facilities job, not a classroom activity, and must be staffed and paid accordingly.</p>
+        <p>Any partnership agreement should name, in writing, which specific curriculum outcome each recurring student task serves. If nobody can name one, the task does not belong to the students.</p>
+        <button class="reviewed-btn" onclick="markDone(1,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc2">
+      <div class="deep-hdr" onclick="toggleDeep(2)">
+        <div class="deep-num">02</div>
+        <div class="deep-meta"><div class="deep-title">Age-Graded Safety</div><div class="deep-tags"><span class="dtag">Safety</span><span class="dtag">Developmental Readiness</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Every hands-on task in this framework is pre-assigned a minimum grade band and a required supervision level (see the Safety Protocols table below) before it is ever offered to a school. No student is asked to perform a task beyond their developmental readiness, and no task requiring certified skill — electrical work, ladder access, reagent handling — is ever left to informal judgment on the day.</p>
+        <p>Where local regulation is stricter than this framework's baseline, local regulation always wins.</p>
+        <button class="reviewed-btn" onclick="markDone(2,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc3">
+      <div class="deep-hdr" onclick="toggleDeep(3)">
+        <div class="deep-num">03</div>
+        <div class="deep-meta"><div class="deep-title">Animal Welfare &amp; Honest Science</div><div class="deep-tags"><span class="dtag">Animal Welfare</span><span class="dtag">Age-Appropriate Honesty</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Salmon are living animals with welfare needs, not lab equipment. Curriculum must include humane husbandry and stress-minimising handling technique, and must be honest — at an age-appropriate level, and with institutional and parental consent frameworks followed — about what harvest means. Sanitising or hiding that reality from older students does not protect them; it just teaches a false picture of where food comes from.</p>
+        <p>No student is ever required to participate in a harvest-related activity that conflicts with their own or their family's values; alternative learning tasks must always be available.</p>
+        <button class="reviewed-btn" onclick="markDone(3,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc4">
+      <div class="deep-hdr" onclick="toggleDeep(4)">
+        <div class="deep-num">04</div>
+        <div class="deep-meta"><div class="deep-title">Equity of Access</div><div class="deep-tags"><span class="dtag">Equity</span><span class="dtag">Zero-Cost Entry</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Tier 1 — Observer Partner — must remain free or near-free indefinitely, so that a school with no discretionary budget is never locked out entirely. Funding and equipment support flowing through this framework should be prioritised toward schools with the least existing access to hands-on science infrastructure, not toward the schools that could already afford it.</p>
+        <p>A partnership model that only wealthy schools can join has failed this principle regardless of how good the science is.</p>
+        <button class="reviewed-btn" onclick="markDone(4,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc5">
+      <div class="deep-hdr" onclick="toggleDeep(5)">
+        <div class="deep-num">05</div>
+        <div class="deep-meta"><div class="deep-title">Student Data Privacy &amp; Consent</div><div class="deep-tags"><span class="dtag">Privacy</span><span class="dtag">Minors Protected</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Any citizen-science data logging built for classroom use must minimise personally identifiable information, remain fully teacher-controlled, and follow privacy-by-design principles consistent with applicable regional student-privacy law (for example FERPA and COPPA in the United States, or PIPEDA in Canada). The interactive tools in this document store only anonymous readings a user types in manually — never a name, an email, or a device identifier.</p>
+        <p>Schools and boards should still confirm compliance with their own counsel and IT policy before deploying any data tool at scale — this framework is a design starting point, not a compliance certification.</p>
+        <button class="reviewed-btn" onclick="markDone(5,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc6">
+      <div class="deep-hdr" onclick="toggleDeep(6)">
+        <div class="deep-num">06</div>
+        <div class="deep-meta"><div class="deep-title">Institutional &amp; Curricular Autonomy</div><div class="deep-tags"><span class="dtag">Teacher-Led</span><span class="dtag">No Mandates</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>This framework is a resource bank, not a mandate. Teachers and institutions retain full control over how — or whether — to adapt any module into their own curriculum. Nothing here should be imposed top-down on educators without their genuine buy-in, and no funding relationship should be structured so that declining a module risks a school's other funding.</p>
+        <button class="reviewed-btn" onclick="markDone(6,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+
+    <div class="deep-card" id="dc7">
+      <div class="deep-hdr" onclick="toggleDeep(7)">
+        <div class="deep-num">07</div>
+        <div class="deep-meta"><div class="deep-title">Community &amp; Land-Based Knowledge</div><div class="deep-tags"><span class="dtag">Indigenous Knowledge</span><span class="dtag">Community Voice</span></div></div>
+        <div class="deep-tog">+</div>
+      </div>
+      <div class="deep-body"><div class="deep-in">
+        <p>Wherever possible, partnerships should invite local Elders, knowledge keepers, and community food-sovereignty practitioners as co-educators — treating traditional ecological knowledge as a rigorous knowledge system alongside laboratory science, not as a decorative land acknowledgment. This should be a genuine relationship the school builds and maintains, not a one-time guest-speaker slot.</p>
+        <button class="reviewed-btn" onclick="markDone(7,this)">Mark as Adopted ✓</button>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>How These Principles Are Enforced</h4>
+    <p>None of these seven principles are self-enforcing. Each partnership tier below names who is responsible for checking them, and the Governance section provides an MOU checklist that puts several of them — labour, data, and exit planning — into a document institutions can actually sign.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     03 — R&D DIGEST
+     ============================================================ -->
+<section class="section" id="research" aria-labelledby="c3">
+  <p class="sk g">03 — Cross-Domain R&amp;D Digest</p>
+  <h2 class="sh" id="c3">Fusing the <em style="color:var(--moss-bright)">Current Research</em> Behind Every Module</h2>
+  <p class="sl">This project sits at the intersection of seven distinct research traditions. None of them are new or speculative — the innovation here is combining them inside one building — but each one shapes a specific design decision made elsewhere in this framework. Educators building a grant application or a curriculum justification can cite any of these directly.</p>
+
+  <div class="sys-grid">
+    <div class="sys-card reveal"><div class="sys-head"><div class="sys-icon">🐟</div><div class="sys-name">Aquaponics &amp; RAS Engineering</div></div><div class="sys-body">Building on Rakocy-style raft and media-bed systems and Timmons &amp; Ebeling's recirculating-aquaculture engineering principles, current practice increasingly favours modular, sensor-monitored systems sized for classroom-scale replication rather than only industrial farms.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.06s"><div class="sys-head"><div class="sys-icon">🥕</div><div class="sys-name">Vertical &amp; Aeroponic Agriculture</div></div><div class="sys-body">Aeroponic root-crop research — with roots in closed-loop life-support studies for space agriculture — has matured into low-cost mist-cycle systems schools can replicate on ordinary shelving with simple timer-and-solenoid electronics.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.12s"><div class="sys-head"><div class="sys-icon">🌿</div><div class="sys-name">Living Wall &amp; Urban Biofiltration</div></div><div class="sys-body">Green-wall research continues to document moss and vascular-plant assemblies as effective particulate and humidity regulators, offering environmental-science classrooms a working case study in phytoremediation.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.18s"><div class="sys-head"><div class="sys-icon">🔭</div><div class="sys-name">Citizen Science &amp; Open Data</div></div><div class="sys-body">Programs such as NASA's GLOBE Program, iNaturalist, and Cornell's NestWatch have normalised student-collected environmental data as scientifically valid — giving classroom water-quality logging a credible, well-tested model to emulate.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.24s"><div class="sys-head"><div class="sys-icon">♿</div><div class="sys-name">Learning Design &amp; Accessibility</div></div><div class="sys-body">CAST's Universal Design for Learning (UDL) framework, alongside Wiggins &amp; McTighe's Understanding by Design, continues to shape how hands-on systems like this one are best scaffolded for mixed-readiness classrooms — including the display settings built into this page.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.3s"><div class="sys-head"><div class="sys-icon">🧩</div><div class="sys-name">Project-Based &amp; Competency Learning</div></div><div class="sys-body">Organisations such as PBLWorks have refined gold-standard project-based learning design — a driving question, sustained inquiry, authentic assessment — directly applicable to a multi-week build-and-monitor unit like this one.</div></div>
+    <div class="sys-card reveal" style="transition-delay:.36s"><div class="sys-head"><div class="sys-icon">🌾</div><div class="sys-name">Land-Based &amp; Community-Engaged Education</div></div><div class="sys-body">Place-based and land-based education research increasingly treats Indigenous ecological knowledge and community food-sovereignty practice as core curriculum content rather than enrichment — a natural fit for a project already rooted in growing food from a shared living system.</div></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     04 — GRADE-BAND PATHWAYS
+     ============================================================ -->
+<section class="section" id="pathways" aria-labelledby="c4">
+  <p class="sk w">04 — Grade-Band Pathways</p>
+  <h2 class="sh" id="c4">Scaffolded From <em style="color:var(--shimmer)">First Wonder</em> to <em style="color:var(--lantern)">Original Research</em></h2>
+  <p class="sl">The same living building teaches a five-year-old and a doctoral candidate — the difference is scaffolding, not content. Select a tab to see the focus, signature activities, and what mastery looks like at each stage.</p>
+
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active" id="tabbtn-elem" role="tab" aria-selected="true" onclick="switchTab('elem')">🌱 Elementary K–6</button>
+    <button class="tab-btn" id="tabbtn-middle" role="tab" aria-selected="false" onclick="switchTab('middle')">🔬 Middle 7–9</button>
+    <button class="tab-btn" id="tabbtn-secondary" role="tab" aria-selected="false" onclick="switchTab('secondary')">📊 Secondary 10–12</button>
+    <button class="tab-btn" id="tabbtn-post" role="tab" aria-selected="false" onclick="switchTab('post')">🎓 Post-Secondary &amp; Research</button>
+  </div>
+  <div class="tab-panels">
+    <div class="tab-panel active" id="tab-elem" role="tabpanel">
+      <p class="tab-focus">Focus: wonder and observation. The goal is not accuracy yet — it's noticing, describing, and caring.</p>
+      <p class="tab-sub">Signature Activities</p>
+      <ul class="tab-list">
+        <li>Moss terrarium observation journal with weekly drawings</li>
+        <li>Simple pH colour-strip testing, adult-assisted, framed as "checking the water's mood"</li>
+        <li>Pumpkin planting-to-harvest counting and graphing</li>
+        <li>"Meet the fish" observation days with a marine-safe distance rule</li>
+        <li>A small Three Sisters-style companion garden bed as a low-tech parallel activity</li>
+      </ul>
+      <p class="tab-sub">What Mastery Looks Like</p>
+      <ul class="tab-list"><li>A completed observation journal with dated entries</li><li>Simple bar-graph literacy from harvest counts</li><li>Oral storytelling of "what I noticed changed"</li></ul>
+    </div>
+    <div class="tab-panel" id="tab-middle" role="tabpanel">
+      <p class="tab-focus">Focus: systems thinking begins. Students start connecting cause and effect across the whole loop, not just one tank.</p>
+      <p class="tab-sub">Signature Activities</p>
+      <ul class="tab-list">
+        <li>Nitrogen-cycle diagramming from direct observation, not just textbook copy</li>
+        <li>Basic water chemistry with digital meters, student-operated after training</li>
+        <li>A classroom-scale ceiling carrot tube trial (2–4 tubes) for hands-on data logging</li>
+        <li>Grapevine pruning basics under direct supervision</li>
+        <li>An engineering design challenge: build a scale-model trellis that holds a target load</li>
+      </ul>
+      <p class="tab-sub">What Mastery Looks Like</p>
+      <ul class="tab-list"><li>A lab notebook with dated, labelled data tables</li><li>A hand-drawn systems diagram connecting at least three subsystems</li><li>A basic line graph of a logged variable over time</li></ul>
+    </div>
+    <div class="tab-panel" id="tab-secondary" role="tabpanel">
+      <p class="tab-focus">Focus: full data literacy and an interdisciplinary capstone. Students should be able to defend a claim with their own data by the end of this stage.</p>
+      <p class="tab-sub">Signature Activities</p>
+      <ul class="tab-list">
+        <li>Independent water-quality monitoring rotations with sign-off responsibility</li>
+        <li>Feed-conversion-ratio calculations from real feeding and growth records</li>
+        <li>A structural-load calculation mini-project sizing a real trellis wire run</li>
+        <li>An original capstone research question — for example, comparing filtration efficiency across moss species</li>
+        <li>Optional co-op or work-placement hours logged against the partnership's Tier 3 site</li>
+      </ul>
+      <p class="tab-sub">What Mastery Looks Like</p>
+      <ul class="tab-list"><li>A formal lab report with method, data, and discussion sections</li><li>A data-driven capstone presentation to a real audience</li><li>A portfolio spanning at least two subsystems</li></ul>
+    </div>
+    <div class="tab-panel" id="tab-post" role="tabpanel">
+      <p class="tab-focus">Focus: original contribution. Students are no longer just learning the system — they are improving it.</p>
+      <p class="tab-sub">Signature Activities</p>
+      <ul class="tab-list">
+        <li>Aquaculture licensing coursework tied directly to the on-site RAS</li>
+        <li>Thesis or capstone projects on RAS optimisation or aeroponic yield</li>
+        <li>Formal data-sharing with the broader project network, with co-authorship where earned</li>
+        <li>Near-peer mentorship roles supporting K-12 partner-school visits — a well-supported model in its own right</li>
+        <li>Departmental review of aquaculture-licensing compliance as a standing course component</li>
+      </ul>
+      <p class="tab-sub">What Mastery Looks Like</p>
+      <ul class="tab-list"><li>Thesis defence or research-publication standard</li><li>Departmental ethics and safety review completed independently</li><li>A documented, transferable protocol other institutions can adopt</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     05 — CURRICULUM MATRIX
+     ============================================================ -->
+<section class="section" id="matrix" aria-labelledby="c5">
+  <p class="sk l">05 — Curriculum Integration Matrix</p>
+  <h2 class="sh" id="c5">Click Any Cell to See a <em style="color:var(--lantern)">Real Lesson Concept</em></h2>
+  <p class="sl">Five disciplines, five building systems, twenty-five genuine starting points for a lesson plan. This is a data-driven tool — every cell below is generated from a single content array, so extending it (adding a discipline, a module, or a grade-specific variant) means adding one entry to that array, not writing new markup. Click a cell to load its content into the panel underneath the grid.</p>
+
+  <div id="matrix-grid" role="grid" aria-label="Curriculum integration matrix"></div>
+  <div id="matrix-detail"><h4>Select a cell to begin</h4><p>Each intersection of a discipline and a building system holds one concrete lesson idea — click any square in the grid above.</p></div>
+  <p class="mx-progress" id="mx-progress">0 / 25 cells explored</p>
+</section>
+
+<!-- ============================================================
+     06 — PARTNERSHIP TIERS
+     ============================================================ -->
+<section class="section" id="tiers" aria-labelledby="c6">
+  <p class="sk g">06 — Partnership Engagement Tiers</p>
+  <h2 class="sh" id="c6">Four Rungs, <em style="color:var(--moss-bright)">Zero Cliff Edges</em></h2>
+  <p class="sl">Every institution — from a rural elementary school with no budget to a full research university — has a legitimate entry point. No tier requires skipping the one below it, and Tier 1 never expires or converts to a paid tier without the institution's own choice.</p>
+
+  <div class="tiers-grid">
+    <div class="tier-card reveal">
+      <div class="tier-head"><div class="tier-num">TIER 01 · FREE</div><div class="tier-name">Observer Partner</div><div class="tier-scope">Field trips, live data dashboard access, guest speakers</div></div>
+      <div class="tier-body"><ul>
+        <li>Scheduled field trips to a hosting site</li>
+        <li>View-only access to live water-quality and harvest data</li>
+        <li>Virtual "adopt-a-tank" style classroom engagement</li>
+        <li>Guest speaker visits, in person or remote</li>
+        <li>No on-site installation or budget required</li>
+      </ul></div>
+    </div>
+    <div class="tier-card reveal" style="transition-delay:.06s">
+      <div class="tier-head"><div class="tier-num">TIER 02 · MODEST BUDGET</div><div class="tier-name">Classroom Module Partner</div><div class="tier-scope">A benchtop-scale system inside one classroom</div></div>
+      <div class="tier-body"><ul>
+        <li>A small benchtop aquaponics kit (fishless nitrogen-cycle demo to start)</li>
+        <li>One moss terrarium panel</li>
+        <li>A 2–4 tube ceiling-carrot rack for hands-on logging</li>
+        <li>Suitable for any single classroom, Grade 4 and up</li>
+        <li>Fits inside a typical school-supply or small-grant budget</li>
+      </ul></div>
+    </div>
+    <div class="tier-card reveal" style="transition-delay:.12s">
+      <div class="tier-head"><div class="tier-num">TIER 03 · FACILITIES COMMITMENT</div><div class="tier-name">Campus Integration Partner</div><div class="tier-scope">A real sub-system hosted on school grounds</div></div>
+      <div class="tier-body"><ul>
+        <li>A courtyard moss-and-grapevine wall, or a small RAS tank feeding a garden bed</li>
+        <li>Used across multiple classes and grade levels</li>
+        <li>Best suited to schools with a STEM lab, greenhouse, or maker space</li>
+        <li>Requires a named facilities lead and staff training</li>
+        <li>Can anchor a whole-school food or science program</li>
+      </ul></div>
+    </div>
+    <div class="tier-card reveal" style="transition-delay:.18s">
+      <div class="tier-head"><div class="tier-num">TIER 04 · FORMAL RESEARCH</div><div class="tier-name">Research Partner</div><div class="tier-scope">Full system, formal ethics review, publishable data</div></div>
+      <div class="tier-body"><ul>
+        <li>Full RAS plus all five building systems</li>
+        <li>Institutional ethics-board reviewed research protocols</li>
+        <li>Data shared with the broader project network</li>
+        <li>Thesis and capstone project pipeline, with co-authorship where earned</li>
+        <li>Formal aquaculture-licensing compliance program</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <svg class="ladder-svg" viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" aria-label="Engagement ladder diagram showing four ascending partnership tiers">
+    <line x1="40" y1="190" x2="600" y2="190" stroke="rgba(240,232,213,0.15)" stroke-width="1"/>
+    <rect x="40" y="150" width="120" height="40" rx="3" fill="rgba(45,125,168,0.25)" stroke="var(--water)"/>
+    <text x="100" y="174" text-anchor="middle" fill="#5BB8D4" font-family="Verdana" font-size="11">Tier 1 · Observer</text>
+    <rect x="180" y="115" width="120" height="75" rx="3" fill="rgba(74,124,89,0.25)" stroke="var(--moss-bright)"/>
+    <text x="240" y="156" text-anchor="middle" fill="#7FB069" font-family="Verdana" font-size="11">Tier 2 · Classroom</text>
+    <rect x="320" y="75" width="120" height="115" rx="3" fill="rgba(201,107,18,0.25)" stroke="var(--pumpkin-glow)"/>
+    <text x="380" y="136" text-anchor="middle" fill="#E8841A" font-family="Verdana" font-size="11">Tier 3 · Campus</text>
+    <rect x="460" y="30" width="120" height="160" rx="3" fill="rgba(229,184,75,0.25)" stroke="var(--lantern)"/>
+    <text x="520" y="113" text-anchor="middle" fill="#F5D06E" font-family="Verdana" font-size="11">Tier 4 · Research</text>
+    <text x="520" y="55" text-anchor="middle" fill="rgba(245,208,110,0.7)" font-family="Georgia" font-size="13">🎓</text>
+  </svg>
+</section>
+
+<!-- ============================================================
+     07 — CLASSROOM TOOLS
+     ============================================================ -->
+<section class="section" id="tools" aria-labelledby="c7">
+  <p class="sk l">07 — Classroom Tools</p>
+  <h2 class="sh" id="c7">Two Working Instruments, Not Just <em style="color:var(--lantern)">Two More Diagrams</em></h2>
+  <p class="sl">These tools are functional, not decorative. Every value they show is computed live in your browser from what you enter, stored only on this device, and fully resettable — exactly the transparency principle this whole framework asks of data collected from students.</p>
+
+  <!-- WIZARD -->
+  <div class="tool-block">
+    <div class="tool-title">🧭 Find Your Pathway</div>
+    <p class="tool-desc">Three quick questions, answered with plain rule-based logic (no hidden scoring, no external service) to recommend a starting tier and two modules.</p>
+    <div class="wiz-dots"><div class="wiz-dot on" id="wd1"></div><div class="wiz-dot" id="wd2"></div><div class="wiz-dot" id="wd3"></div><div class="wiz-dot" id="wd4"></div></div>
+
+    <div class="wiz-screen active" id="wiz-screen-1">
+      <p class="wiz-q">What kind of institution are you?</p>
+      <div class="wiz-opts">
+        <button class="wiz-opt" onclick="wizardChoose('inst',1,this,1)">Elementary School</button>
+        <button class="wiz-opt" onclick="wizardChoose('inst',2,this,1)">Middle or Secondary School</button>
+        <button class="wiz-opt" onclick="wizardChoose('inst',3,this,1)">College or University</button>
+        <button class="wiz-opt" onclick="wizardChoose('inst',4,this,1)">School Board / District Office</button>
+      </div>
+      <div class="wiz-nav"><span></span><button class="wiz-btn" id="wiz-next-1" disabled onclick="wizardGo(2)">Next →</button></div>
+    </div>
+
+    <div class="wiz-screen" id="wiz-screen-2">
+      <p class="wiz-q">What's your current resource level?</p>
+      <div class="wiz-opts">
+        <button class="wiz-opt" onclick="wizardChoose('res',1,this,2)">Just curious, no budget yet</button>
+        <button class="wiz-opt" onclick="wizardChoose('res',2,this,2)">Some funding &amp; classroom space</button>
+        <button class="wiz-opt" onclick="wizardChoose('res',3,this,2)">A dedicated STEM lab or greenhouse</button>
+        <button class="wiz-opt" onclick="wizardChoose('res',4,this,2)">An established research facility</button>
+      </div>
+      <div class="wiz-nav"><button class="wiz-btn ghost" onclick="wizardGo(1)">← Back</button><button class="wiz-btn" id="wiz-next-2" disabled onclick="wizardGo(3)">Next →</button></div>
+    </div>
+
+    <div class="wiz-screen" id="wiz-screen-3">
+      <p class="wiz-q">What's your primary goal right now?</p>
+      <div class="wiz-opts">
+        <button class="wiz-opt" onclick="wizardChoose('goal',1,this,3)">Spark student curiosity</button>
+        <button class="wiz-opt" onclick="wizardChoose('goal',2,this,3)">Build a cross-curricular unit</button>
+        <button class="wiz-opt" onclick="wizardChoose('goal',3,this,3)">Host a real living system on campus</button>
+        <button class="wiz-opt" onclick="wizardChoose('goal',4,this,3)">Start a formal research collaboration</button>
+      </div>
+      <div class="wiz-nav"><button class="wiz-btn ghost" onclick="wizardGo(2)">← Back</button><button class="wiz-btn" id="wiz-next-3" disabled onclick="wizardGo(4)">See My Pathway →</button></div>
+    </div>
+
+    <div class="wiz-screen" id="wiz-screen-4">
+      <div class="wiz-result">
+        <div class="wiz-result-label">Recommended Partnership Tier</div>
+        <div class="wiz-result-tier" id="wiz-result-tier">—</div>
+        <div class="wiz-result-label">Suggested Starting Modules</div>
+        <ul id="wiz-result-mods"></ul>
+        <div class="wiz-nav"><button class="wiz-btn ghost" onclick="wizardRestart()">↺ Start Over</button><button class="wiz-btn" id="wiz-copy-btn" onclick="copyWizSummary()">Copy Summary</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGGER -->
+  <div class="tool-block">
+    <div class="tool-title">📈 Water Quality Logger (Demo)</div>
+    <p class="tool-desc">Adjust the four sliders to any reading you like, then log it — exactly the workflow a student would use on a real tank. Safe-zone thresholds match the salmon and biofilter figures established in Volume I.</p>
+    <div class="logger-grid">
+      <div class="logger-field">
+        <div class="logger-field-hdr"><label for="log-ph">pH</label><span class="logger-val" id="log-ph-val">7.0</span></div>
+        <input type="range" id="log-ph" min="6" max="8.5" step="0.1" value="7.0" oninput="updateLoggerReadout()"/>
+        <span class="chip ok" id="log-ph-chip">Safe</span>
+      </div>
+      <div class="logger-field">
+        <div class="logger-field-hdr"><label for="log-nh3">Ammonia-N</label><span class="logger-val" id="log-nh3-val">0.10 mg/L</span></div>
+        <input type="range" id="log-nh3" min="0" max="1.5" step="0.05" value="0.10" oninput="updateLoggerReadout()"/>
+        <span class="chip ok" id="log-nh3-chip">Safe</span>
+      </div>
+      <div class="logger-field">
+        <div class="logger-field-hdr"><label for="log-do">Dissolved O₂</label><span class="logger-val" id="log-do-val">8.0 mg/L</span></div>
+        <input type="range" id="log-do" min="0" max="12" step="0.1" value="8.0" oninput="updateLoggerReadout()"/>
+        <span class="chip ok" id="log-do-chip">Safe</span>
+      </div>
+      <div class="logger-field">
+        <div class="logger-field-hdr"><label for="log-temp">Temperature</label><span class="logger-val" id="log-temp-val">12.0°C</span></div>
+        <input type="range" id="log-temp" min="0" max="25" step="0.5" value="12.0" oninput="updateLoggerReadout()"/>
+        <span class="chip ok" id="log-temp-chip">Safe</span>
+      </div>
+    </div>
+    <div class="logger-btns">
+      <button class="wiz-btn" onclick="logReading()">Log This Reading</button>
+      <button class="wiz-btn ghost" onclick="resetLogger()">Reset Log</button>
+    </div>
+    <canvas id="logger-canvas" width="600" height="320"></canvas>
+  </div>
+</section>
+
+<!-- ============================================================
+     08 — SAFETY PROTOCOLS
+     ============================================================ -->
+<section class="section" id="safety" aria-labelledby="c8">
+  <p class="sk p">08 — Safety &amp; Supervision Protocols</p>
+  <h2 class="sh" id="c8">Every Activity, <em style="color:var(--pumpkin-glow)">Graded and Named</em></h2>
+  <p class="sl">This table is the practical expression of Ethics Principle 02. No task below is optional to follow, and local occupational-safety regulation always overrides these baselines where it is stricter.</p>
+
+  <table class="data-tbl reveal">
+    <thead><tr><th>Activity</th><th>Minimum Grade Band</th><th>Supervision</th><th>Notes / PPE</th></tr></thead>
+    <tbody>
+      <tr><td>Water quality testing (strips or digital meter)</td><td>Elementary+ (adult-assisted); independent Grade 7+</td><td>Adult present for Elementary; trained sign-off for older</td><td>Gloves for reagent kits; eye protection for titration</td></tr>
+      <tr><td>Fish feeding &amp; observation</td><td>Elementary+</td><td>Adult supervision through Grade 8; independent after certified training</td><td>Hand hygiene before/after; no tapping on tank glass</td></tr>
+      <tr><td>Fish handling / netting</td><td>Secondary (Grade 9+) minimum</td><td>Direct adult supervision always; trained personnel only</td><td>Wet hands before contact to protect the slime coat; minimise air exposure time</td></tr>
+      <tr><td>Pump / electrical maintenance</td><td>Observation Grade 10+; hands-on Grade 11+ or post-secondary</td><td>Certified adult/electrician present for any live work</td><td>Lockout-tagout before component access; GFCI-protected circuits mandatory</td></tr>
+      <tr><td>Moss wall trimming / maintenance</td><td>Elementary+</td><td>Adult supervision through Grade 6; independent after</td><td>Basic hand hygiene only</td></tr>
+      <tr><td>Grapevine pruning (sharp tools)</td><td>Middle school+ (Grade 7+)</td><td>Direct adult supervision always for tool use</td><td>Safety gloves and eye protection; tool-handling training required first</td></tr>
+      <tr><td>Pumpkin harvest</td><td>Elementary+</td><td>Adult supervision through Grade 4; independent after</td><td>Lifting-technique guidance for fruit over 3 kg</td></tr>
+      <tr><td>Ceiling carrot rack access (ladder/lift)</td><td>Secondary (Grade 9+) minimum</td><td>Direct adult supervision always</td><td>Fall protection per local occupational safety code; no solo ladder work</td></tr>
+      <tr><td>Reagent handling (titration kits)</td><td>Independent use from Grade 9+</td><td>Adult supervision for younger students; trained sign-off for older</td><td>Follow the Safety Data Sheet for every reagent; eye-wash station accessible</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <h4>Alternative Tasks Are Always Available</h4>
+    <p>Every activity above has a lower-tier equivalent a student can do instead — observing rather than handling, graphing rather than titrating — so that a student below the minimum grade band, or simply not comfortable with a task, is never excluded from the unit as a whole.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     09 — FUNDING & GOVERNANCE
+     ============================================================ -->
+<section class="section" id="funding" aria-labelledby="c9">
+  <p class="sk g">09 — Funding &amp; Governance</p>
+  <h2 class="sh" id="c9">Paying For It <em style="color:var(--moss-bright)">Without Compromising It</em></h2>
+  <p class="sl">Money is where good ethics charters usually break. The categories below are starting points, not a live grant database — program names, eligibility, and deadlines change, so verify current details directly with each program before budgeting around it.</p>
+
+  <div class="fund-grid">
+    <div class="fund-card reveal">
+      <h4>Public &amp; Institutional Grants</h4>
+      <p>School-board innovation funds, provincial or state environmental-education grants, and long-running agriculture-in-the-classroom programs are the most stable category — built for exactly this kind of hands-on unit.</p>
+      <div class="fund-tags"><span class="fund-tag">Ag in the Classroom (provincial chapters)</span><span class="fund-tag">EcoSchools programs</span><span class="fund-tag">STEM outreach charities</span></div>
+    </div>
+    <div class="fund-card reveal" style="transition-delay:.06s">
+      <h4>Corporate &amp; Community Partnerships</h4>
+      <p>Corporate ESG and CSR programs — of the kind modelled in a companion governance framework for private-sector partners — can be a genuine funding source, provided the partnership MOU contractually protects the Ethics Charter's anti-exploitation and no-advertising-to-minors principles.</p>
+      <div class="fund-tags"><span class="fund-tag">Environmental foundation grants</span><span class="fund-tag">Local food infrastructure programs</span><span class="fund-tag">Employee volunteer-hour matching</span></div>
+    </div>
+    <div class="fund-card reveal" style="transition-delay:.12s">
+      <h4>In-Kind &amp; Volunteer Support</h4>
+      <p>Retired tradespeople volunteering electrical or plumbing time, university extension programs providing technical mentorship, and aquarium-society or master-gardener networks are consistently underused sources of exactly the certified skill this framework's safety table requires.</p>
+      <div class="fund-tags"><span class="fund-tag">Retired-trades volunteer networks</span><span class="fund-tag">University extension programs</span><span class="fund-tag">Aquarium &amp; horticultural societies</span></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>Funding Disclaimer</h4>
+    <p>This section names program categories and real, long-standing organisation types for orientation only — it is not a live funding directory. Confirm current eligibility, deadlines, and application details directly with each program before committing a budget.</p>
+  </div>
+
+  <h3 class="tab-sub" style="margin-top:2.2rem;font-size:0.78rem">Partnership MOU — Starting Checklist</h3>
+  <ul class="mou-list">
+    <li><strong>Roles &amp; Responsibilities</strong> Who provides daily fish/plant care, and who carries liability if a system fails.</li>
+    <li><strong>Safety Sign-Off Chain</strong> A named responsible safety officer, mapped to the per-activity supervision levels above.</li>
+    <li><strong>Data Ownership &amp; Privacy</strong> Who owns collected data and how any student-generated data is anonymised and used.</li>
+    <li><strong>Intellectual Property</strong> Recommend open licensing (e.g. CC BY-NC or CC BY-SA) for any teacher-created lesson materials, so they can be shared onward.</li>
+    <li><strong>Insurance &amp; Liability</strong> Confirmed coverage under the institution's existing policy or a separate rider, specifically for animal-related and electrical/structural components.</li>
+    <li><strong>Exit / Wind-Down Plan</strong> A humane transition plan for fish and plants if the partnership ends — never abandonment.</li>
+    <li><strong>Review Cadence</strong> An annual checkpoint to re-confirm every item above still holds.</li>
+  </ul>
+  <div class="callout">
+    <h4>Not Legal Advice</h4>
+    <p>This checklist is a starting point for discussion, not a legal document. Have any formal MOU reviewed by your institution's legal counsel and insurance provider before signing.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="ft-in">
+    <div class="ft-col">
+      <h4>About This Volume</h4>
+      <p>A companion to the Living Building Conversion Framework, focused entirely on how educational bodies — from a single elementary classroom to a full university research department — can get involved safely, equitably, and on their own terms.</p>
+      <p style="margin-top:.6rem">Provided for educational and planning purposes. Structural, electrical, and aquaculture activities always require qualified professional oversight and appropriate licensing regardless of grade band.</p>
+    </div>
+    <div class="ft-col">
+      <h4>Research &amp; Framework Foundations</h4>
+      <ul>
+        <li>CAST — Universal Design for Learning (UDL)</li>
+        <li>Wiggins &amp; McTighe — Understanding by Design</li>
+        <li>PBLWorks — Gold Standard Project-Based Learning</li>
+        <li>NASA/NSF GLOBE Program</li>
+        <li>iNaturalist (Cal Academy / National Geographic)</li>
+        <li>Cornell Lab of Ornithology — NestWatch</li>
+        <li>FAO Aquaponics · Rakocy · Timmons &amp; Ebeling (Vol. I)</li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Zero-Harm &amp; Anti-Inversion</h4>
+      <div class="zh"><strong>Zero-Harm:</strong> No telemetry, auto-send features, or external network calls after load. All progress and settings are stored locally (IndexedDB) and fully user-resettable. No data is ever collected from or about minors beyond anonymous demo values entered by hand. <strong>Anti-Inversion:</strong> Nothing here may be used to mandate unpaid student labour, expose student data, advertise to a captive classroom, or bypass a qualified adult's safety judgment.</div>
+    </div>
+  </div>
+  <div class="ft-btm">
+    <span>© 2026 Living Building Conversion Framework — Volume II · CC BY-NC 4.0</span>
+    <span>All data local-only · No external calls · User-resettable</span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     Sectioned as: IndexedDB → Splash → Settings → Nav → Search →
+     Ethics/Milestones → Tabs → Matrix → Tiers/SVG (static) →
+     Wizard → Logger → HUD/Constellation → Scroll Reveal → Boot
+     ============================================================ -->
+<script>
+/* ============================================================
+   INDEXEDDB — local persistence
+   DB name is distinct from Volume I ('LivingBuildEDU') so the
+   two documents never collide if opened in the same browser.
+   TO EXTEND: add new keys via dbSet/dbGet — no schema migration
+   needed since the store is a simple keyPath:'key' table.
+   ============================================================ */
+let db, reviewed = new Set(), sectsSeen = 0, matrixExplored = new Set(), loggerData = [];
+const DB='LivingBuildEDU', VER=1, ST='state';
+
+function initDB(){
+  return new Promise(res=>{
+    const r=indexedDB.open(DB,VER);
+    r.onupgradeneeded=e=>{e.target.result.createObjectStore(ST,{keyPath:'key'})};
+    r.onsuccess=e=>{db=e.target.result;res()};
+    r.onerror=()=>res();
+  });
+}
+function dbSet(k,v){if(!db)return;const tx=db.transaction(ST,'readwrite');tx.objectStore(ST).put({key:k,val:v})}
+function dbGet(k){return new Promise(res=>{if(!db)return res(null);const tx=db.transaction(ST,'readonly'),r=tx.objectStore(ST).get(k);r.onsuccess=()=>res(r.result?r.result.val:null);r.onerror=()=>res(null)})}
+function dbDel(k){if(!db)return;const tx=db.transaction(ST,'readwrite');tx.objectStore(ST).delete(k)}
+
+/* ============================================================
+   SPLASH
+   ============================================================ */
+function exitSplash(){
+  document.getElementById('splash').classList.add('out');
+  document.getElementById('nav').classList.add('vis');
+  dbSet('seen',true);
+  setTimeout(()=>{document.getElementById('splash').style.display='none'},1100);
+}
+async function initSplash(){
+  const seen=await dbGet('seen');
+  if(seen){exitSplash();return}
+  const bar=document.getElementById('sbar'),btn=document.getElementById('sbtn');
+  setTimeout(()=>{bar.style.width='100%'},100);
+  setTimeout(()=>{btn.classList.add('show')},3000);
+}
+(function initSplashCanvas(){
+  const c=document.getElementById('splash-canvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const drops=[];
+  for(let i=0;i<50;i++){drops.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,len:Math.random()*55+18,speed:Math.random()*2.6+0.9,alpha:Math.random()*0.28+0.05,w:Math.random()*1.4+0.5});}
+  function draw(){
+    if(!document.getElementById('splash')||document.getElementById('splash').classList.contains('out'))return;
+    ctx.clearRect(0,0,c.width,c.height);
+    drops.forEach(d=>{
+      ctx.strokeStyle=`rgba(229,184,75,${d.alpha})`;ctx.lineWidth=d.w;
+      ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-d.len*0.08,d.y+d.len);ctx.stroke();
+      d.y+=d.speed; if(d.y>c.height+70){d.y=-70;d.x=Math.random()*c.width}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* Ambient background water lines — purely decorative, mirrors Vol. I */
+(function initWater(){
+  const c=document.getElementById('water-canvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const waves=[];
+  for(let i=0;i<5;i++){waves.push({y:0.2+Math.random()*0.6,amp:Math.random()*28+10,freq:Math.random()*0.005+0.003,speed:Math.random()*0.35+0.1,phase:Math.random()*Math.PI*2,alpha:Math.random()*0.12+0.04});}
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    waves.forEach(w=>{
+      ctx.beginPath();
+      for(let x=0;x<=c.width;x+=4){const y=w.y*c.height+Math.sin(x*w.freq+t*w.speed+w.phase)*w.amp;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+      ctx.strokeStyle=`rgba(229,184,75,${w.alpha})`;ctx.lineWidth=1;ctx.stroke();
+    });
+    t+=0.5;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================================================
+   DISPLAY SETTINGS — UDL accessibility panel
+   TO EXTEND: add a new settings-row + settings-opt group in the
+   HTML, then branch on the new key inside applySettings().
+   EXPECTED OUTCOME: setting persists across reloads via
+   IndexedDB and applies instantly without a page refresh.
+   ============================================================ */
+function openSettings(){document.getElementById('settings-ov').classList.add('open')}
+function closeSettings(){document.getElementById('settings-ov').classList.remove('open')}
+function applySettings(s){
+  document.documentElement.style.setProperty('--text-scale', s.textScale||1);
+  document.body.classList.toggle('reduced-motion', s.reducedMotion===true);
+  document.body.classList.toggle('high-contrast', s.highContrast===true);
+}
+async function updateSetting(key,value,el){
+  if(el){el.parentElement.querySelectorAll('.settings-opt').forEach(o=>o.classList.remove('active'));el.classList.add('active');}
+  const cur=(await dbGet('settings'))||{};
+  cur[key]=value;
+  dbSet('settings',cur);
+  applySettings(cur);
+}
+function syncSettingsUI(s){
+  document.querySelectorAll('.settings-opt').forEach(btn=>{
+    const key=btn.dataset.key, val=btn.dataset.val;
+    let current=s[key];
+    if(current===undefined) current = key==='textScale'?1:false;
+    const match = key==='textScale' ? (parseFloat(val)===parseFloat(current)) : (String(current)===val);
+    btn.classList.toggle('active',match);
+  });
+}
+function resetSettingsUI(){dbDel('settings');applySettings({});syncSettingsUI({})}
+async function loadSettings(){
+  const s=(await dbGet('settings'))||{};
+  if(s.reducedMotion===undefined && window.matchMedia('(prefers-reduced-motion: reduce)').matches) s.reducedMotion=true;
+  applySettings(s);
+  syncSettingsUI(s);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function initNav(){
+  const nav=document.getElementById('nav');
+  const links=nav.querySelectorAll('.nav-links a');
+  const ids=['vision','ethics','research','pathways','matrix','tiers','tools','safety','funding'];
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>200)nav.classList.add('vis');
+    let cur='';
+    ids.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-120)cur=id;});
+    links.forEach(a=>a.classList.toggle('act',a.getAttribute('href')==='#'+cur));
+  },{passive:true});
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+const IDX=[
+  {id:'vision',title:'Vision — The Missing Multiplier',body:'why educational bodies aquaponics classroom living building teach curriculum salmon moss grapevine pumpkin carrot data literacy'},
+  {id:'ethics',title:'Ethics Charter — Benevolent Methodology',body:'no extractive labour age graded safety animal welfare equity of access student data privacy consent institutional autonomy land based knowledge indigenous'},
+  {id:'research',title:'Cross-Domain R&D Digest',body:'aquaponics RAS engineering aeroponic vertical farming living wall biofiltration citizen science GLOBE iNaturalist NestWatch UDL Wiggins McTighe PBLWorks land based education'},
+  {id:'pathways',title:'Grade-Band Pathways',body:'elementary middle secondary post secondary research pathway grade band moss terrarium nitrogen cycle capstone thesis mentorship'},
+  {id:'matrix',title:'Curriculum Integration Matrix',body:'biology chemistry engineering physics math data environmental social studies salmon nutrient moss grapevine pumpkin carrot interactive matrix lesson concept'},
+  {id:'tiers',title:'Partnership Engagement Tiers',body:'observer partner classroom module campus integration research partner tier free budget facilities commitment ladder'},
+  {id:'tools',title:'Classroom Tools — Wizard & Logger',body:'find your pathway wizard water quality logger simulator pH ammonia dissolved oxygen temperature safe zone chart'},
+  {id:'safety',title:'Safety & Supervision Protocols',body:'fish handling electrical maintenance ladder grapevine pruning reagent PPE supervision grade band safety data sheet'},
+  {id:'funding',title:'Funding & Governance',body:'grants ag in the classroom ecoschools corporate ESG MOU checklist roles safety sign off data ownership intellectual property insurance exit plan'},
+];
+function openSearch(){document.getElementById('search-ov').classList.add('open');const si=document.getElementById('sinput');si.value='';document.getElementById('sres').innerHTML='<div class="s-empty">Begin typing to search…</div>';setTimeout(()=>si.focus(),60)}
+function runSearch(q){
+  const c=document.getElementById('sres');
+  if(!q||q.trim().length<2){c.innerHTML='<div class="s-empty">Begin typing to search…</div>';return}
+  const terms=q.toLowerCase().split(' ').filter(Boolean);
+  const res=IDX.filter(item=>{const h=(item.title+' '+item.body).toLowerCase();return terms.every(t=>h.includes(t))});
+  if(!res.length){c.innerHTML='<div class="s-empty">No results. Try different keywords.</div>';return}
+  c.innerHTML=res.map(r=>`<div class="s-item" onclick="goTo('${r.id}')"><h4>${r.title}</h4><p>${r.body.substring(0,110)}…</p></div>`).join('');
+}
+function goTo(id){document.getElementById('search-ov').classList.remove('open');const el=document.getElementById(id);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),200)}
+document.getElementById('search-ov').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+document.getElementById('settings-ov').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.getElementById('search-ov').classList.remove('open');document.getElementById('settings-ov').classList.remove('open')}
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch()}
+});
+
+/* ============================================================
+   MILESTONES — unified for Ethics (1–7), Wizard (8), Logger (9),
+   Matrix (10). markDone(n, btn?) works with or without a button
+   element, so it can be called both from a click handler and
+   programmatically from the tools below.
+   ============================================================ */
+function toggleDeep(n){
+  const c=document.getElementById('dc'+n);if(!c)return;
+  const was=c.classList.contains('open');
+  document.querySelectorAll('.deep-card').forEach(d=>d.classList.remove('open'));
+  if(!was){c.classList.add('open');if(!c.dataset.seen){c.dataset.seen='1';sectsSeen++;updateHUD();}}
+}
+function markDone(n,btn){
+  if(reviewed.has(n))return;
+  reviewed.add(n);
+  if(btn){btn.textContent='✓ Adopted';btn.disabled=true;const c=btn.closest('.deep-card');if(c)c.classList.add('done');}
+  dbSet('reviewed',[...reviewed]);
+  updateHUD();drawConst();
+}
+async function loadMilestones(){
+  const r=await dbGet('reviewed');
+  if(Array.isArray(r)){
+    r.forEach(n=>{
+      reviewed.add(n);
+      const c=document.getElementById('dc'+n);
+      if(c){c.classList.add('done');const b=c.querySelector('.reviewed-btn');if(b){b.textContent='✓ Adopted';b.disabled=true;}}
+    });
+  }
+  updateHUD();drawConst();
+}
+function resetAll(){
+  reviewed.clear();sectsSeen=0;matrixExplored.clear();
+  dbDel('reviewed');dbDel('seen');dbDel('matrixExplored');
+  document.querySelectorAll('.deep-card').forEach(c=>{c.classList.remove('done');delete c.dataset.seen;const b=c.querySelector('.reviewed-btn');if(b){b.textContent='Mark as Adopted ✓';b.disabled=false;}});
+  document.querySelectorAll('.mx-btn').forEach(b=>b.classList.remove('explored'));
+  document.getElementById('mx-progress').textContent='0 / 25 cells explored';
+  updateHUD();drawConst();
+}
+
+/* ============================================================
+   TABS — Grade-Band Pathways
+   ============================================================ */
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tabbtn-'+id).classList.add('active');
+  document.getElementById('tabbtn-'+id).setAttribute('aria-selected','true');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+/* ============================================================
+   CURRICULUM MATRIX — data-driven interactive grid
+   TO EXTEND: add a new row to MATRIX_ROWS, a new column to
+   MATRIX_COLS, and matching '<row>-<col>' entries to
+   MATRIX_CONTENT — buildMatrix() regenerates the whole grid
+   from these three arrays/objects, so no HTML editing is needed.
+   EXPECTED OUTCOME: the grid gains a row/column automatically
+   and the progress counter's denominator should be updated to
+   match rows*cols if you change the grid size.
+   ============================================================ */
+const MATRIX_ROWS=['Biology','Chemistry','Engineering & Physics','Math & Data','Environmental & Social Studies'];
+const MATRIX_COLS=[
+  {icon:'🐟',label:'Salmon RAS'},
+  {icon:'💧',label:'Nutrient Cycle'},
+  {icon:'🌿',label:'Moss Biofilter'},
+  {icon:'🎃',label:'Grape & Pumpkin Wall'},
+  {icon:'🥕',label:'Ceiling Carrots'}
+];
+const MATRIX_CONTENT={
+'0-0':'Trace the salmonid life cycle and compare gill respiration and osmoregulation in fresh vs. saline conditions; observe growth-stage differences between RAS-reared and wild-population data.',
+'0-1':'Culture and view Nitrosomonas/Nitrobacter biofilm samples under a microscope; map the nitrogen cycle as a living food-web diagram rather than a textbook abstraction.',
+'0-2':'Study bryophyte (non-vascular plant) reproduction via spores versus seed-plant reproduction, and compare filtration efficiency across the three moss species used in the wall.',
+'0-3':'Investigate cucurbit flower biology through hand-pollination practice, and track vine phototropism and tendril mechanics over a growing season.',
+'0-4':'Examine root gravitropism and auxin hormone signalling directly by comparing normally-grown and aeroponically-suspended carrot root morphology.',
+'1-0':'Plot dissolved-oxygen solubility against temperature and validate it with real tank readings; run ammonia/nitrite/nitrate titration kits as a hands-on analytical chemistry unit.',
+'1-1':'Frame nitrification as a redox-reaction case study, then practice acid-base buffering by adjusting system pH with potassium bicarbonate and observing the titration curve.',
+'1-2':'Test the cation-exchange capacity of moss felt substrate and its capacity to adsorb dissolved nutrients and trace heavy metals.',
+'1-3':'Use a refractometer to track Brix (sugar content) as grapes ripen, and analyse substrate nutrient chemistry (N-P-K ratios) in the growing pockets.',
+'1-4':'Calculate nutrient-solution concentrations and electrical-conductivity (EC) targets for the aeroponic mist, and calibrate an EC meter as a real instrumentation exercise.',
+'2-0':'Model waterfall drop height against oxygen-transfer efficiency, and size a recirculation pump using real head-pressure and flow-rate calculations.',
+'2-1':'Design and test biofilter media configurations for surface-area-to-volume ratio, then measure flow dynamics through a packed bed.',
+'2-2':'Measure capillary wicking rate through felt substrate samples, then calculate the structural load a wall-mounted panel places on its backing frame.',
+'2-3':'Run a statics problem sizing trellis wire tension against the combined dead load of vine and hanging fruit.',
+'2-4':'Design a simple timer-and-solenoid circuit for a mist cycle, and calculate the point load a suspended carrot rack places on ceiling joists.',
+'3-0':'Model exponential fish-biomass growth and compute feed-conversion ratios; use the results to optimise a stocking-density plan.',
+'3-1':'Log water-chemistry readings as a time series and graph the biofilter\'s nitrification curve during its 4–6 week cycling period.',
+'3-2':'Calculate percentage wall coverage over time and fit a colonisation growth curve to weekly photo-based measurements.',
+'3-3':'Forecast per-square-metre fruit yield from historical spacing data, and calculate trellis wire geometry and load distribution.',
+'3-4':'Schedule overlapping 70–90 day crop-cycle rotations across a fixed number of grow tubes to maximise continuous yield.',
+'4-0':'Research wild salmon population history and Indigenous fishing rights and traditions, then debate the tradeoffs of closed-system aquaculture as a sustainability response.',
+'4-1':'Compare this closed-loop nitrogen cycle against agricultural runoff and eutrophication case studies from a nearby watershed.',
+'4-2':'Use moss as a bioindicator of local air quality, and connect the wall\'s function to broader urban green-infrastructure policy.',
+'4-3':'Study food sovereignty and seed-saving traditions, including the companion-planting practice — often called the Three Sisters — used by many Indigenous nations across North America.',
+'4-4':'Debate vertical farming\'s role in food-desert policy and urban land use, using the ceiling system as a concrete local example.'
+};
+function buildMatrix(){
+  const grid=document.getElementById('matrix-grid');
+  let html='<div class="mx-cell mx-corner">Discipline ↓ / Module →</div>';
+  MATRIX_COLS.forEach(c=>{html+=`<div class="mx-cell mx-colhead" title="${c.label}"><span class="mx-icon">${c.icon}</span><span class="mx-collabel">${c.label}</span></div>`;});
+  MATRIX_ROWS.forEach((r,ri)=>{
+    html+=`<div class="mx-cell mx-rowhead">${r}</div>`;
+    MATRIX_COLS.forEach((c,ci)=>{
+      const key=ri+'-'+ci;
+      html+=`<button type="button" class="mx-cell mx-btn" data-key="${key}" onclick="clickMatrix('${key}')" aria-label="${r} and ${c.label}">${c.icon}</button>`;
+    });
+  });
+  grid.innerHTML=html;
+  matrixExplored.forEach(key=>{const btn=document.querySelector(`.mx-btn[data-key="${key}"]`);if(btn)btn.classList.add('explored');});
+  updateMatrixProgress();
+}
+function clickMatrix(key){
+  const btn=document.querySelector(`.mx-btn[data-key="${key}"]`);
+  if(btn)btn.classList.add('explored');
+  matrixExplored.add(key);
+  dbSet('matrixExplored',[...matrixExplored]);
+  const [ri,ci]=key.split('-').map(Number);
+  document.getElementById('matrix-detail').innerHTML=`<h4>${MATRIX_ROWS[ri]} × ${MATRIX_COLS[ci].label}</h4><p>${MATRIX_CONTENT[key]}</p>`;
+  updateMatrixProgress();
+  if(matrixExplored.size>=25) markDone(10);
+}
+function updateMatrixProgress(){document.getElementById('mx-progress').textContent=matrixExplored.size+' / 25 cells explored';}
+
+/* ============================================================
+   WIZARD — 3-step pathway finder
+   TO EXTEND: add a fourth question by duplicating a wiz-screen
+   block, updating wiz-dots to 5, and adding its key to the
+   averaging logic in computeWizardResult().
+   EXPECTED OUTCOME: recommended tier shifts smoothly as more
+   signal is added to the average.
+   ============================================================ */
+let wizardStep=1;
+const wizardAnswers={};
+function wizardChoose(key,value,el,step){
+  wizardAnswers[key]=value;
+  el.parentElement.querySelectorAll('.wiz-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  const nextBtn=document.getElementById('wiz-next-'+step);
+  if(nextBtn)nextBtn.disabled=false;
+}
+function wizardGo(step){
+  document.querySelectorAll('.wiz-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('wiz-screen-'+step).classList.add('active');
+  wizardStep=step;
+  document.querySelectorAll('.wiz-dot').forEach((d,i)=>d.classList.toggle('on',i<step));
+  if(step===4)computeWizardResult();
+}
+function wizardRestart(){
+  wizardAnswers.inst=undefined;wizardAnswers.res=undefined;wizardAnswers.goal=undefined;
+  document.querySelectorAll('.wiz-opt').forEach(o=>o.classList.remove('sel'));
+  document.getElementById('wiz-next-1').disabled=true;
+  document.getElementById('wiz-next-2').disabled=true;
+  document.getElementById('wiz-next-3').disabled=true;
+  wizardGo(1);
+}
+function computeWizardResult(){
+  const inst=wizardAnswers.inst||2, res=wizardAnswers.res||2, goal=wizardAnswers.goal||2;
+  const avg=(inst+res+goal)/3;
+  const tierIdx = avg<1.75?0 : avg<2.75?1 : avg<3.5?2 : 3;
+  const tiers=['Tier 1 — Observer Partner','Tier 2 — Classroom Module Partner','Tier 3 — Campus Integration Partner','Tier 4 — Research Partner'];
+  const modulesByInst={
+    1:['Moss Terrarium Observation Journal','Pumpkin Planting & Harvest Counting'],
+    2:['Nitrogen Cycle Diagramming','Ceiling Carrot Tube Trial'],
+    3:['RAS Optimisation Capstone Project','Aeroponic Yield Research Project'],
+    4:['District-Wide Ethics Charter Adoption','Multi-School Observer Tier Rollout']
+  };
+  const mods=modulesByInst[inst]||modulesByInst[2];
+  const tierName=tiers[tierIdx];
+  document.getElementById('wiz-result-tier').textContent=tierName;
+  document.getElementById('wiz-result-mods').innerHTML=mods.map(m=>'<li>'+m+'</li>').join('');
+  window.__wizSummary=`Recommended Partnership Tier: ${tierName}\nSuggested Starting Modules:\n- ${mods.join('\n- ')}`;
+  markDone(8);
+}
+function copyWizSummary(){
+  const text=window.__wizSummary||'';
+  const btn=document.getElementById('wiz-copy-btn');
+  const orig=btn.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied ✓';setTimeout(()=>{btn.textContent=orig;},1800);
+  }).catch(()=>{
+    btn.textContent='Copy unavailable — select text manually';setTimeout(()=>{btn.textContent=orig;},2200);
+  });
+}
+
+/* ============================================================
+   WATER QUALITY LOGGER — live canvas mini-charts
+   Thresholds match Volume I's nutrient-cycle table exactly, so
+   a reading that would stress a real salmon shows amber/red here.
+   TO EXTEND: add a fifth parameter by adding a slider, a
+   statusFor() branch, and a panels entry in drawLoggerChart().
+   EXPECTED OUTCOME: a new mini-chart panel appears in the 2x3
+   (or adjusted) canvas grid automatically.
+   ============================================================ */
+function statusFor(param,val){
+  if(param==='ph') return (val>=6.8&&val<=7.4)?'ok':((val>=6.2&&val<=8.0)?'warn':'bad');
+  if(param==='nh3') return (val<=0.5)?'ok':((val<=1.0)?'warn':'bad');
+  if(param==='do') return (val>=7)?'ok':((val>=6)?'warn':'bad');
+  if(param==='temp') return (val>=10&&val<=15)?'ok':((val>=7&&val<=18)?'warn':'bad');
+  return 'ok';
+}
+function setChip(id,status){
+  const el=document.getElementById(id);
+  el.className='chip '+status;
+  el.textContent = status==='ok'?'Safe':status==='warn'?'Caution':'Danger';
+}
+function updateLoggerReadout(){
+  const ph=parseFloat(document.getElementById('log-ph').value);
+  const nh3=parseFloat(document.getElementById('log-nh3').value);
+  const doo=parseFloat(document.getElementById('log-do').value);
+  const temp=parseFloat(document.getElementById('log-temp').value);
+  document.getElementById('log-ph-val').textContent=ph.toFixed(1);
+  document.getElementById('log-nh3-val').textContent=nh3.toFixed(2)+' mg/L';
+  document.getElementById('log-do-val').textContent=doo.toFixed(1)+' mg/L';
+  document.getElementById('log-temp-val').textContent=temp.toFixed(1)+'°C';
+  setChip('log-ph-chip',statusFor('ph',ph));
+  setChip('log-nh3-chip',statusFor('nh3',nh3));
+  setChip('log-do-chip',statusFor('do',doo));
+  setChip('log-temp-chip',statusFor('temp',temp));
+}
+function logReading(){
+  const ph=parseFloat(document.getElementById('log-ph').value);
+  const nh3=parseFloat(document.getElementById('log-nh3').value);
+  const doo=parseFloat(document.getElementById('log-do').value);
+  const temp=parseFloat(document.getElementById('log-temp').value);
+  loggerData.push({day:loggerData.length+1,ph,nh3,doo,temp});
+  if(loggerData.length>20)loggerData.shift();
+  dbSet('loggerData',loggerData);
+  drawLoggerChart();
+  if(loggerData.length>=3)markDone(9);
+}
+function resetLogger(){loggerData=[];dbDel('loggerData');drawLoggerChart();}
+function drawLoggerChart(){
+  const cv=document.getElementById('logger-canvas');if(!cv)return;
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const panels=[
+    {key:'ph',label:'pH',min:6,max:8.5,safe:[6.8,7.4],color:'#7FB069'},
+    {key:'nh3',label:'Ammonia-N (mg/L)',min:0,max:1.5,safe:[0,0.5],color:'#D45845'},
+    {key:'doo',label:'Dissolved O₂ (mg/L)',min:0,max:12,safe:[7,12],color:'#5BB8D4'},
+    {key:'temp',label:'Temp (°C)',min:0,max:25,safe:[10,15],color:'#E5B84B'}
+  ];
+  const pw=W/2-15, phh=H/2-15;
+  panels.forEach((p,i)=>{
+    const ox=(i%2)*(W/2)+10, oy=Math.floor(i/2)*(H/2)+10;
+    ctx.strokeStyle='rgba(240,232,213,0.15)';
+    ctx.strokeRect(ox,oy,pw,phh);
+    const yFor=v=>oy+phh-((v-p.min)/(p.max-p.min))*phh;
+    const ySafeTop=yFor(p.safe[1]), ySafeBot=yFor(p.safe[0]);
+    ctx.fillStyle='rgba(127,176,105,0.12)';
+    ctx.fillRect(ox,ySafeTop,pw,ySafeBot-ySafeTop);
+    ctx.fillStyle='rgba(240,232,213,0.7)';
+    ctx.font='10px Verdana';ctx.textAlign='left';
+    ctx.fillText(p.label,ox+4,oy+12);
+    if(loggerData.length>0){
+      const denom=Math.max(loggerData.length-1,1);
+      if(loggerData.length>1){
+        ctx.beginPath();
+        loggerData.forEach((d,di)=>{
+          const x=ox+(di/denom)*pw, y=yFor(d[p.key]);
+          di===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        });
+        ctx.strokeStyle=p.color;ctx.lineWidth=1.5;ctx.stroke();
+      }
+      loggerData.forEach((d,di)=>{
+        const x=ox+(di/denom)*pw, y=yFor(d[p.key]);
+        ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();
+      });
+    } else {
+      ctx.fillStyle='rgba(240,232,213,0.3)';ctx.font='9px Verdana';
+      ctx.fillText('Log a reading to begin',ox+4,oy+phh/2);
+    }
+  });
+}
+
+/* ============================================================
+   HUD & CONSTELLATION — 10-milestone scale
+   ============================================================ */
+function updateHUD(){
+  const n=reviewed.size,p=(n/10)*100;
+  document.getElementById('hv1').textContent=n+' / 10';
+  document.getElementById('hbb').style.width=p+'%';
+  document.getElementById('hv2').textContent=sectsSeen;
+  const lvls=['Newcomer','Curious Observer','Classroom Explorer','Systems Thinker','Data Collector','Cross-Curricular Builder','Ethics Champion','Partnership Steward','Research Collaborator','Community Architect'];
+  document.getElementById('hvl').textContent=lvls[Math.min(n,9)];
+}
+function drawConst(){
+  const cv=document.getElementById('const-c');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2;
+  ctx.clearRect(0,0,W,H);
+  const nodes=[];
+  const offsets=[[0,-3],[2,-2],[3,0],[2,3],[0,4],[-2,2],[-3,0],[-2,-2],[0,-4],[1,-1]];
+  for(let i=0;i<10;i++){
+    const a=(i/10)*Math.PI*2-Math.PI/2, r=52;
+    nodes.push({x:cx+r*Math.cos(a)+offsets[i][0],y:cy+r*Math.sin(a)+offsets[i][1],id:i+1,on:reviewed.has(i+1)});
+  }
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i],b=nodes[j];
+      const dist=Math.hypot(a.x-b.x,a.y-b.y);
+      if(dist<90){
+        ctx.lineWidth=0.8;
+        ctx.strokeStyle=(a.on&&b.on)?'rgba(229,184,75,0.45)':'rgba(91,184,212,0.06)';
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      }
+    }
+  }
+  nodes.forEach(n=>{
+    ctx.beginPath();ctx.arc(n.x,n.y,n.on?5.5:3,0,Math.PI*2);
+    if(n.on){ctx.shadowColor='#E5B84B';ctx.shadowBlur=10;ctx.fillStyle='#E5B84B';}
+    else{ctx.shadowBlur=0;ctx.fillStyle='rgba(91,184,212,0.35)';}
+    ctx.fill();ctx.shadowBlur=0;
+    ctx.font='6.5px "Courier New"';
+    ctx.fillStyle=n.on?'rgba(245,208,110,0.9)':'rgba(91,184,212,0.35)';
+    ctx.textAlign='center';ctx.fillText('0'+n.id,n.x,n.y-7);
+  });
+  ctx.font='bold 10px "Courier New"';ctx.fillStyle='rgba(240,232,213,0.7)';ctx.textAlign='center';
+  ctx.fillText(reviewed.size+'/10',cx,cy+4);
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        if(e.target.classList.contains('section')&&!e.target.dataset.cnt){e.target.dataset.cnt='1';sectsSeen++;updateHUD();}
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.section,.reveal').forEach(el=>obs.observe(el));
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+(async function boot(){
+  await initDB();
+  await loadSettings();
+  buildMatrix();
+  const savedMx=await dbGet('matrixExplored');
+  if(Array.isArray(savedMx)){matrixExplored=new Set(savedMx);document.querySelectorAll('.mx-btn').forEach(b=>{if(matrixExplored.has(b.dataset.key))b.classList.add('explored');});updateMatrixProgress();}
+  const savedLog=await dbGet('loggerData');
+  if(Array.isArray(savedLog))loggerData=savedLog;
+  await loadMilestones();
+  initSplash();
+  initNav();
+  initReveal();
+  updateLoggerReadout();
+  drawLoggerChart();
+  updateHUD();
+  drawConst();
+})();
+</script>
+</body>
+</html>
